@@ -5,7 +5,7 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
-let openai = new OpenAI({ apiKey: api, dangerouslyAllowBrowser: true });
+// let openai = new OpenAI({ apiKey: api, dangerouslyAllowBrowser: true });
 
 async function convert(url) {
     const transcript = await YoutubeTranscript.fetchTranscript(url);
