@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech with Download</title>
+</head>
+<body>
+
+    <h1>Text to Speech with Download</h1>
+    <textarea id="text" rows="4" cols="50">హలో, మీరు ఎలా ఉన్నారు?</textarea><br><br>
+    <button onclick="speakAndDownload()">Speak and Download</button>
+
+    <script>
+        function speakAndDownload() {
+            const text = document.getElementById("text").value;
+            const speech = new SpeechSynthesisUtterance(text);
+
+            // Set the language to Telugu
+            speech.lang = 'te-IN'; // Telugu language code
+            speech.rate = 1; // Speed of speech
+            speech.pitch = 1; // Pitch of speech
+
+            // Create a MediaRecorder to capture the speech output
+            const mediaStream = new MediaStream();
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const destination = audioContext.createMediaStreamDestination();
+            const recorder = new MediaRecorder(destination.stream);
+
+            recorder.ondataavailable = function (event) {
+                const audioBlob = event.data;
+                const audioURL = URL.createObjectURL(audioBlob);
+                const link = document.createElement('a');
+                link.href = audioURL;
+                link.download = 'speech_output.wav'; // Download the speech as a .wav file
+                link.click();
+            };
+
+            // Start recording when the speech starts
+            recorder.start();
+
+            // Speak the text
+            speechSynthesis.speak(speech);
+
+            // Stop recording after speech has finished
+            speech.onend = function() {
+                recorder.stop();
+            };
+        }
+    </script>
+
+</body>
+</html>
