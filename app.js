@@ -5,7 +5,6 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
-let api = "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";
 let openai = new OpenAI({ apiKey: api, dangerouslyAllowBrowser: true });
 
 async function convert(url) {
