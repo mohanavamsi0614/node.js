@@ -1,11 +1,13 @@
 import { YoutubeTranscript } from "youtube-transcript";
 import OpenAI from "openai";
 import express from "express";
+import { config } from "dotenv";
+config()
 import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
-// let openai = new OpenAI({ apiKey: api, dangerouslyAllowBrowser: true });
+let openai = new OpenAI({ apiKey: process.env.api, dangerouslyAllowBrowser: true });
 
 async function convert(url) {
     const transcript = await YoutubeTranscript.fetchTranscript(url);

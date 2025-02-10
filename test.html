@@ -1,13 +1,4 @@
-import express from "express"
-import puppeteer from "puppeteer";
-import cors from 'cors'
-const app = express();
-
-app.use(express.json());
-app.use(cors())
-
-function generateHTML(title, authors, summary,published,dep,date) {
-  return ` <!DOCTYPE html>
+ <!DOCTYPE html>
 
 <html lang="en" style="--app-height: 812px; --nav-ref-placeholder-height: 49px;">
 
@@ -15292,16 +15283,16 @@ authors}
           <span data-test-id="venue-metadata">
             <a class="cl-paper-venue cl-paper-venue--paper-metadata" data-test-id="normalized-venue-link" data-heap-id="venue_serp_link_click" href="https://www.semanticscholar.org/venue?name=Electronic%20Markets">
               <span class="" data-test-id="venue-metadata">
-                <span> ${
+                <span>      ${
 
-" "+published+" " || "dino"}
+" "+published+" " || "dino"}       
 </span>
               </span></a></span> 
               <span data-test-id="paper-year">
                 <span class="">
-                  <span> ${
+                  <span>     ${
 
-" "+date+"  " || "1 September 2002"}
+" "+date+"  " || "1 September 2002"}      
 
                   </span>
                 </span>
@@ -15309,9 +15300,9 @@ authors}
             </span>
           </li>
           <li class="paper-meta-item">
-             ${
+                   ${
 
-" "+dep+" " || "Computer"}
+" "+department+" " || "Computer"}      
 
           </li>
         </ul>
@@ -15322,8 +15313,7 @@ authors}
                 <span class="cl-button__label">
                   TLDR</span></button>
                 </div><div class="cl-dropdown__popover"></div></div><span class=""><span>${
-
-summary}
+                answer}
 </span>
               </span>
              
@@ -15358,8 +15348,7 @@ summary}
                               <span class="flex-row-centered"><svg aria-hidden="true" width="12" height="12" alt="" class="icon-svg icon-fa-bell" data-test-id="icon-fa-bell">
                                 <use xlink:href="#fa-bell"></use></svg>
                                 <span class="icon-button-text">Create Alert</span><span class="icon-button-responsive-text">Alert</span></span></button></div><div class="flex-item flex-paper-actions__item--hidden-when-narrow"><button class="icon-button cite-button flex-paper-actions__button flex-paper-actions__button--responsive-secondary" data-test-id="cite-link" data-heap-id="pdp_actions_cite" target="_blank"><span class="flex-row-centered">
-                                  <svg aria-hidden="true" width="11" height="11" alt="" class="icon-svg icon-fa-quote" data-test-id="icon-fa-quote"><use xlink:href="#fa-quote"></use></svg><span class="icon-button-text">Cite</span></span></button></div></div></div></div></div></div><div class="flex-item flex-item--width-33 flex-item__right-column"><button data-heap-id="share_link" aria-label="Copy a shareable link to your clipboard" type="submit" class="cl-button cl-button--no-arrow-divider cl-button--not-icon-only cl-button--has-icon cl-button--has-label cl-button--font-size- cl-button--icon-pos-left cl-button--shape-rectangle cl-button--size-default cl-button--type-tertiary cl-button--density-default cl-icon-button share-link-button paper-detail-page__share-social-options"><span class="cl-button__icon"><svg aria-hidden="true" alt="" class="icon-svg icon-fa-link" data-test-id="icon-fa-link">
-                                    <use xlink:href="#fa-link"></use></svg></span><span class="cl-button__label">Share</span>
+                                  <svg aria-hidden="true" width="11" height="11" alt="" class="icon-svg icon-fa-quote" data-test-id="icon-fa-quote"><use xlink:href="#fa-quote"></use></svg><span class="icon-button-text">Cite</span></span></button></div></div></div></div></div></div><div class="flex-item flex-item--width-33 flex-item__right-column"><button data-heap-id="share_link" aria-label="Copy a shareable link to your clipboard" type="submit" class="cl-button cl-button--no-arrow-divider cl-button--not-icon-only cl-button--has-icon cl-button--has-label cl-button--font-size- cl-button--icon-pos-left cl-button--shape-rectangle cl-button--size-default cl-button--type-tertiary cl-button--density-default cl-icon-button share-link-button paper-detail-page__share-social-options">
                                   </button><div class="scorecard"><div class="scorecard_container">
                                     <div class="flex-item scorecard__item"><div class="scorecard__stat scorecard__citation-intent" data-heap-id="pdp_scorecard_item" data-heap-type="citation-intent" data-test-id="scorecard-citation-intent">
                                       <div class="scorecard-stat__body" data-test-id="scorecard-body"><span class="scorecard-stat__headline">
@@ -15370,9 +15359,8 @@ summary}
                                             <a href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#citing-papers">
                                               <div class="scorecard-citation__key-title">Highly Influential Citations</div>
                                             </a><span><a href="https://www.semanticscholar.org/faq#influential-citations" class="" aria-label="Learn more about highly influenced citations">
-                                              <svg aria-hidden="true" class="scorecard-citation__influential-citations-info icon-svg icon-information" alt="" data-test-id="icon-information"><use xlink:href="#information"></use></svg></a>
                                             </span></div>
-                                            <div class="scorecard-citation__metadata-item"></div></div>
+                                            </div>
                                             <div class="scorecard-citation">
                                               <div class="scorecard-citation__metadata">
                                                 <div class="scorecard-citation__metadata__stat">
@@ -15386,10 +15374,8 @@ summary}
                                                   <div class="scorecard-citation__metadata__stat">
                                                     <a href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#citing-papers"><div class="scorecard-citation__title"> Methods Citations</div></a><span></span></div><div class="scorecard-citation__metadata-item"></div></div><div class="scorecard-citation__metadata"><div class="scorecard-citation__metadata__stat">
                                                       <a href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#citing-papers"><div class="scorecard-citation__title"> Results Citations</div></a><span></span></div>
-                                                      <div class="scorecard-citation__metadata-item">1</div></div></div><a class="scorecard-stat__headline__view-all" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#citing-papers"><button data-heap-id="pdp_citing_scorecard_item" data-heap-key="view_all" type="submit" class="cl-button cl-button--no-arrow-divider cl-button--not-icon-only cl-button--no-icon cl-button--has-label cl-button--font-size- cl-button--icon-pos-left cl-button--shape-rectangle cl-button--size-default cl-button--type-secondary cl-button--density-default scorecard-stat__headline__view-all_btn"><span class="cl-button__label">View All</span></button>
+                                                      <div class="scorecard-citation__metadata-item"></div></div></div><a class="scorecard-stat__headline__view-all" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#citing-papers"><button data-heap-id="pdp_citing_scorecard_item" data-heap-key="view_all" type="submit" class="cl-button cl-button--no-arrow-divider cl-button--not-icon-only cl-button--no-icon cl-button--has-label cl-button--font-size- cl-button--icon-pos-left cl-button--shape-rectangle cl-button--size-default cl-button--type-secondary cl-button--density-default scorecard-stat__headline__view-all_btn"><span class="cl-button__label">View All</span></button>
                                                       </a></div></div></div></div></div></div></div></div></div></div><div class="paper-detail-page__paper-nav"><div class="paper-nav"><div class="paper-nav__placeholder"><nav class="paper-nav__nav"><div class="paper-nav__scrollable"><ul class="paper-nav__nav-list"><li class="paper-nav__nav-item paper-nav__is-solitary paper-nav__is-prominent paper-nav__is-visible">
-                                                        <a class="paper-nav__nav-link" data-heap-id="paper_nav_target" data-heap-nav="extracted" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#extracted"><span class="paper-nav__nav-label">Tables</span></a></li><li class="paper-nav__nav-item"><a class="paper-nav__nav-link" data-heap-id="paper_nav_target" data-heap-nav="paper-topics" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#paper-topics"><span class="paper-nav__nav-label">Topics</span></a></li><li class="paper-nav__nav-item"><a class="paper-nav__nav-link" data-heap-id="paper_nav_target" data-heap-nav="citing-papers" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#citing-papers"><span class="paper-nav__nav-label">86 Citations</span></a></li><li class="paper-nav__nav-item"><a class="paper-nav__nav-link" data-heap-id="paper_nav_target" data-heap-nav="cited-papers" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#cited-papers"><span class="paper-nav__nav-label">56 References</span></a></li><li class="paper-nav__nav-item">
-                                                          <a class="paper-nav__nav-link" data-heap-id="paper_nav_target" data-heap-nav="related-papers" href="https://www.semanticscholar.org/paper/An-Historical-Appraisal-of-Information-Technology-Batiz-Lazo-Wood/650b08f70ed2ed4b8b8d383c8d7b9e260ade16f3?p2df#related-papers"><span class="paper-nav__nav-label">Related Papers</span></a></li></ul></div></nav></div></div>
 </span></span></a></span></span>
 
 
@@ -15413,36 +15399,4 @@ var a=google_tag_manager["rm"]["12236506"](39);"undefined"===typeof a?a=1:a++;go
 
 "undefined"===typeof google_tag_manager["rm"]["12236506"](41)&&google_tag_manager["rm"]["12236506"](42)("tisestart",google_tag_manager["rm"]["12236506"](43),18E5,"/","semanticscholar.org")}
 )();</script></body> -->
-</html>`
-}
-
-app.post("/generate-screenshot", async (req, res) => {
-    try {
-        const { title, authors, summary,published,dep,date } = req.body;
-
-        if (!title || !authors || !summary) {
-            return res.status(400).json({ error: "Missing required fields" });
-        }
-
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        const htmlContent = generateHTML(title, authors, summary,published,dep,date);
-        await page.setContent(htmlContent, { waitUntil: "domcontentloaded" });
-        const { width, height } = await page.evaluate(() => ({
-          width: window.screen.width,
-          height: window.screen.height
-      }));
-      await page.setViewport({ width, height });    
-      const screenshot = await page.screenshot({ encoding: "base64" });
-        await browser.close();
-        res.json(`data:image/png;base64,${screenshot}`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error: " + error.message });
-    }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+</html>
