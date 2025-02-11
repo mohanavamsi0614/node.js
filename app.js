@@ -1,9 +1,9 @@
 import { YoutubeTranscript } from "youtube-transcript";
 import OpenAI from "openai";
 import express from "express";
-import { config } from "dotenv";
-config()
+import dotenv from "dotenv";
 import cors from "cors";
+dotenv.config()
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -30,6 +30,7 @@ app.post("/", async (req, res) => {
         const data = await convert(url);
         res.send(data);
     } catch (error) {
+        console.log(error)
         res.status(500).send("Error processing request");
     }
 });

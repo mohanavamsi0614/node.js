@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
@@ -8,16 +9,10 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);  // Start loading
+    setLoading(true); 
     try {
-      const response = await fetch("http://localhost:5000", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ url })
-      });
-      const data = await response.text();
+      const response = await axios.post("http://localhost:5000", { url });
+      const data = response.data;
       setResult(data);
     } catch (error) {
       console.error("Error:", error);
@@ -27,20 +22,23 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Youtube to Telugu Translation</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form-container">
         <input 
           type="text" 
           value={url} 
           onChange={(e) => setUrl(e.target.value)} 
           placeholder="Enter Youtube URL" 
+          className="input-field"
         />
-        <button type="submit" disabled={loading}>Translate</button>
+        <button type="submit" disabled={loading} className="submit-button">
+          {loading ? "Translating..." : "Translate"}
+        </button>
       </form>
-      <div>
+      <div className="result-container">
         <h2>Translation Result:</h2>
-      {loading && <div className="spinner"></div>}
+        {loading && <div className="spinner"></div>}
         <p>{result}</p>
       </div>
     </div>
