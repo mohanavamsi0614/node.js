@@ -11,7 +11,7 @@ function App() {
     e.preventDefault();
     setLoading(true); 
     try {
-      const response = await axios.post("http://localhost:5000", { url });
+      const response = await axios.post("https://node-js-5dhg.onrender.com", { url });
       const data = response.data;
       setResult(data);
     } catch (error) {
