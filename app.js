@@ -6,7 +6,7 @@ import cors from "cors";
 dotenv.config()
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin:"*"}));
 let openai = new OpenAI({ apiKey: process.env.api, dangerouslyAllowBrowser: true });
 
 async function convert(url) {
