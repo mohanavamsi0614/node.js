@@ -3,17 +3,17 @@ import OpenAI from "openai";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-dotenv.config()
+import mongoose from "mongoose";
+import eventRoutes from "./routes/eventRoutes";
+
+dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors({origin:"*"}));
+app.use(cors({ origin: "*" }));
+
 let openai = new OpenAI({ apiKey: process.env.api, dangerouslyAllowBrowser: true });
 
 async function convert(url) {
-    const transcript = await YoutubeTranscript.fetchTranscript(url);
-    let response = transcript.map((i) => i.text).join(" ");
-    const completion = await openai.chat.completions.create({
-        model: "o1-mini",
         messages: [
             {
                 role: "user",
