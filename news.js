@@ -2,6 +2,13 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
+import express from "express"
+
+const app=express()
+
+app.get("/",(req,res)=>{
+  res.send("running...")})
+
 
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
@@ -156,3 +163,7 @@ async function runScraper() {
     }
   }
 })();
+
+app.listen(5000,()=>{
+  console.log("runing")
+})
