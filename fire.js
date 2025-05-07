@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv"
 import express from "express"
 
-const app=expres()
+const app=express()
 app.get("/",(req,res)=>{
   res.send("jfen")})
 
