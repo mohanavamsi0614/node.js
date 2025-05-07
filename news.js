@@ -76,10 +76,7 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
       })
       .filter(Boolean);
 
-    if (!noNews) {
-      logWithTime(`🤖 No links, likely bot detection.`);
-      return "bot";
-    }
+
 
     const dataToStore = {
       Symbol,
