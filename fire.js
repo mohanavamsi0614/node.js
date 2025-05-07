@@ -7,7 +7,8 @@ import express from "express"
 const app=express()
 app.get("/",(req,res)=>{
   res.send("jfen")})
-
+app.listen(6000,()=>{
+  console.log("running")})
 dotenv.config()
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
@@ -53,9 +54,8 @@ for (let stock of stocks) {
 
     console.log(`Inserted data for ${stock.Name}`);
   } catch (err) {
-    console.error(`Error processing ${stock.Name}:`, err.message);
+    console.log(`Error processing ${stock.Name}:`, err.message);
   }
 }
 
-app.listen(4000,()=>{
-  console.log("running")})
+
