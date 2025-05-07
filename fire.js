@@ -2,6 +2,12 @@ import axios from "axios";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv"
+import express from "express"
+
+const app=expres()
+app.get("/",(req,res)=>{
+  res.send("jfen")})
+
 dotenv.config()
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
@@ -50,3 +56,6 @@ for (let stock of stocks) {
     console.error(`Error processing ${stock.Name}:`, err.message);
   }
 }
+
+app.listen(4000,()=>{
+  console.log("running")})
