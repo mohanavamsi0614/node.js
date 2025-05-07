@@ -1,7 +1,8 @@
 import axios from "axios";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
-
+import dotenv from "dotenv"
+dotenv.config()
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
 const DB_NAME = "stocksDB";
@@ -31,7 +32,7 @@ for (let stock of stocks) {
       { url: stock.Website, formats: ["links"] },
       {
         headers: {
-          Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
+          Authorization: "Bearer "+process.env.token,
         },
       }
     );
