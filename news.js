@@ -13,7 +13,7 @@ app.get("/",(req,res)=>{
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
 const DB_NAME = "stocksDB";
-const COLLECTION_NAME = "profiles";
+const COLLECTION_NAME = "profiles_allstocks";
 
 // Utility functions
 function sleep(ms) {
@@ -43,7 +43,7 @@ async function connectToMongo() {
 
 // Main stock processing logic
 async function processStock({ Name, Symbol, Sector, Industry }, collection) {
-  const link = `https://stockanalysis.com/quote/${Symbol.replace(':', '/')}`;
+  const link = `https://stockanalysis.com/quote/${Symbol.replace(':', '/')}/company`;
   logWithTime(`➡️ Fetching: ${link}`);
 
   try {
@@ -67,23 +67,14 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
       .toArray()
       .some((el) => $(el).text().includes("There is no news available yet."));
 
-    const links = $("h3 a")
+    const des = $("p")
       .toArray()
-      .map((a) => {
-        const href = $(a).attr("href");
-        if (!href) return null;
-        return href.startsWith("http") ? href : `https://stockanalysis.com${href}`;
-      })
-      .filter(Boolean);
-
-
-
     const dataToStore = {
       Symbol,
       company: Name,
       Sector,
       Industry,
-      links: noNews ? ["No links available"] : links,
+      des: des,
     };
 
     await collection.updateOne({ Symbol }, { $set: dataToStore }, { upsert: true });
@@ -91,7 +82,7 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
     if (noNews) {
       logWithTime(`🚫 No news for ${Symbol}`);
     } else {
-      logWithTime(`✅ Done: ${Symbol} | ${links.length} links`);
+      logWithTime(`✅ Done: ${Symbol} | ${des.length} des`);
     }
 
   } catch (err) {
