@@ -68,7 +68,6 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
       .some((el) => $(el).text().includes("There is no news available yet."));
 
     const des = $("p")
-      .toArray()
     const dataToStore = {
       Symbol,
       company: Name,
