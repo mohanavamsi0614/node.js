@@ -67,21 +67,26 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
       .toArray()
       .some((el) => $(el).text().includes("There is no news available yet."));
 
-    const des = $("p")
-    const dataToStore = {
-      Symbol,
-      company: Name,
-      Sector,
-      Industry,
-      des: des,
-    };
+   const description = $("p")
+  .toArray()
+  .map(p => $(p).text())
+  .filter(text => text.trim().length > 0);
+
+const dataToStore = {
+  Symbol,
+  company: Name,
+  Sector,
+  Industry,
+  description,
+};
+
 
     await collection.updateOne({ Symbol }, { $set: dataToStore }, { upsert: true });
 
     if (noNews) {
       logWithTime(`🚫 No news for ${Symbol}`);
     } else {
-      logWithTime(`✅ Done: ${Symbol} | ${des.length} des`);
+      logWithTime(`✅ Done: ${Symbol} | ${description.length} des`);
     }
 
   } catch (err) {
