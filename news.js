@@ -70,7 +70,7 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
    const description = $("p")
   .toArray()
   .map(p => $(p).text())
-  .filter(text => text.trim().length > 0);
+  .filter(text => text.trim().length > 0).join(" ");
 
 const dataToStore = {
   Symbol,
