@@ -1,20 +1,25 @@
 import axios from "axios";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
-import dotenv from "dotenv"
-import express from "express"
+import scaraper from "./scraper.js";
+import express from  "express";
 
-const app=express()
-app.get("/",(req,res)=>{
-  res.send("jfen")})
-app.listen(6000,()=>{
-  console.log("running")})
-dotenv.config()
+const app = express();
+app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+}
+);
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
 const DB_NAME = "stocksDB";
+console.log("ihiok")
 const COLLECTION_NAME = "Web_links";
 
+// Connect to MongoDB
 async function connectToMongo() {
   const client = new MongoClient(MONGO_URI);
   await client.connect();
@@ -25,13 +30,20 @@ async function connectToMongo() {
 
 const { collection } = await connectToMongo();
 
-let stocks = JSON.parse(await fs.readFile("./main_stocks.json", "utf-8"));
-
-let Symbols=await collection.find({}).toArray()
-Symbols=Symbols.map((i)=>{return i.symbol})
+// Read stocks from file
+let stocks = JSON.parse(await fs.readFile("./main_stocks_investor.json", "utf-8"));
+// Get already processed symbols
+let Symbols = await collection.find({}).toArray();
+console.log("loaded")
+Symbols = Symbols
+.filter((i) =>i.ir.length!=0)
+.map((i) => i.symbol);
+console.log(Symbols)
 for (let stock of stocks) {
-    if (Symbols.includes(stock.Symbol)) continue
+  if (Symbols.includes(stock.Symbol)) continue;
   if (!stock.Website) continue;
+
+  console.log("Processing stock:", stock.Name);
 
   try {
     const res = await axios.post(
@@ -39,23 +51,54 @@ for (let stock of stocks) {
       { url: stock.Website, formats: ["links"] },
       {
         headers: {
-          Authorization: "Bearer "+process.env.token,
+          Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
         },
       }
     );
 
     const links = res.data.data.links;
-    await collection.insertOne({
-      name: stock.Name,
-      symbol: stock.Symbol,
-      website: stock.Website,
-      links,
-    });
 
-    console.log(`Inserted data for ${stock.Name}`);
+    const doc = await collection.findOne({ symbol: stock.Symbol });
+
+    if (doc) {
+      const existingLinks = doc.links || [];
+      const combinedLinks = [...new Set([...existingLinks, ...links])];
+
+      await collection.updateOne(
+        { symbol: stock.Symbol },
+        { $set: { links: combinedLinks, ir: "done" } }
+      );
+    } else {
+      await collection.insertOne({
+        name: stock.Name,
+        symbol: stock.Symbol,
+        website: stock.Website,
+        links,
+        ir: "done",
+      });
+    }
+
+    console.log(`✅ Inserted/Updated data for ${stock.Name}`);
   } catch (err) {
-    console.log(`Error processing ${stock.Name}:`, err.message);
+    console.error(`❌ Error with ${stock.Name}:`, err.message);
+    console.log("⚙️ Falling back to local scraper...");
+
+    try {
+      const links = await scaraper(stock.Website);
+      if (links) {
+        await collection.insertOne({
+          name: stock.Name,
+          symbol: stock.Symbol,
+          website: stock.Website,
+          links,
+          ir: "done",
+        });
+        console.log(`✅ Inserted (local) data for ${stock.Name}`);
+      } else {
+        console.log(`⚠️ No links found locally for ${stock.Name}`);
+      }
+    } catch (err2) {
+      console.log(`❌ Local scrape failed for ${stock.Name}:`, err2.message);
+    }
   }
 }
-
-
