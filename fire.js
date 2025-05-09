@@ -1,7 +1,6 @@
 import axios from "axios";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
-import scaraper from "./scraper.js";
 import express from  "express";
 
 const app = express();
@@ -81,24 +80,6 @@ for (let stock of stocks) {
     console.log(`✅ Inserted/Updated data for ${stock.Name}`);
   } catch (err) {
     console.error(`❌ Error with ${stock.Name}:`, err.message);
-    console.log("⚙️ Falling back to local scraper...");
-
-    try {
-      const links = await scaraper(stock.Website);
-      if (links) {
-        await collection.insertOne({
-          name: stock.Name,
-          symbol: stock.Symbol,
-          website: stock.Website,
-          links,
-          ir: "done",
-        });
-        console.log(`✅ Inserted (local) data for ${stock.Name}`);
-      } else {
-        console.log(`⚠️ No links found locally for ${stock.Name}`);
-      }
-    } catch (err2) {
-      console.log(`❌ Local scrape failed for ${stock.Name}:`, err2.message);
-    }
+   
   }
 }
