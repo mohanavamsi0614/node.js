@@ -60,7 +60,7 @@ async function updateFaviconData() {
 
     for (const stock of stocks) {
       const id = stock._id;
-      const websiteUrl = stock.link;
+      const websiteUrl = stock.Website;
 
       if (!websiteUrl || websiteUrl === "") {
         console.log(`No website for ${stock.name}, setting link and favicon as 'not found'`);
