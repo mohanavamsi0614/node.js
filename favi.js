@@ -16,14 +16,14 @@ app.listen(6500, () => console.log("Running on port 6500..."));
 const S3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  region: "eu-north-1"
 });
 
 // MongoDB Setup
-const client = new MongoClient(process.env.MONGO_URI);
-const DB_NAME = process.env.MONGO_DB_NAME;
-const COLLECTION_NAME = process.env.MONGO_COLLECTION_NAME;
-const BUCKET = process.env.S3_BUCKET;
+const client = new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster/");
+const DB_NAME = "financial_reports";
+const COLLECTION_NAME = "symbols_main_stock_list";
+const BUCKET = "mainstocklist";
 
 // Favicon Fetcher Function
 async function getFaviconUrl(websiteUrl) {
