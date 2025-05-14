@@ -2,7 +2,7 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import AWS from "aws-sdk";
 import axios from "axios";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import { config } from "dotenv";
 import { URL } from "url";
 
