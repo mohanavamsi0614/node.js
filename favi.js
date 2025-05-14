@@ -26,7 +26,7 @@ const COLLECTION_NAME = "symbols_main_stock_list";
 const BUCKET = "mainstocklist";
 
 // Favicon Fetcher Function
-async function getFaviconUrl(websiteUrl) {
+async function getFaviconUrl(websiteUrl,name) {
   try {
     const response = await axios.get(websiteUrl, { timeout: 10000 });
     const $ = cheerio.load(response.data);
@@ -39,7 +39,7 @@ async function getFaviconUrl(websiteUrl) {
       const hostname = new URL(websiteUrl).hostname;
       await S3.putObject({
         Bucket: BUCKET,
-        Key: `favicons/${hostname}.ico`,
+        Key: `favicons/${name}.ico`,
         Body: iconData.data,
         ContentType: "image/x-icon",
       }).promise();
@@ -64,17 +64,17 @@ async function updateFaviconData() {
 
     for (const stock of stocks) {
       const id = stock._id;
-      const websiteUrl = stock.link || stock.Website;
+      const websiteUrl = stock.Website;
 
       if (!websiteUrl || websiteUrl.trim() === "") {
-        console.log(`No website for ${stock.name}, marking 'not found'`);
+        console.log(`No website for ${stock.Name}, marking 'not found'`);
         await collection.updateOne({ _id: id }, {
           $set: { link: "not found", favicon: "not found" }
         });
         continue;
       }
 
-      const faviconUrl = await getFaviconUrl(websiteUrl);
+      const faviconUrl = await getFaviconUrl(websiteUrl,stock.Name);
       await collection.updateOne({ _id: id }, {
         $set: { favicon: faviconUrl }
       });
