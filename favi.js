@@ -79,7 +79,7 @@ async function updateFaviconData() {
         $set: { favicon: faviconUrl }
       });
 
-      console.log(`Updated ${stock.name}: ${faviconUrl}`);
+      console.log(`Updated ${stock.Name}: ${faviconUrl}`);
     }
 
   } catch (err) {
