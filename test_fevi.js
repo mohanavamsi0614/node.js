@@ -53,7 +53,12 @@ async function updateFaviconData() {
     const db = client.db(DB_NAME);
     const collection = db.collection(COLLECTION_NAME);
 
-    const stocks = await collection.find({}).toArray();
+    const stocks = await collection.find({
+      $or: [
+        { favicon: { $exists: false } },
+        { favicon: "not found" }
+      ]
+    }).toArray();
 
     for (const stock of stocks) {
       const id = stock._id;
