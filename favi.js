@@ -69,14 +69,14 @@ async function updateFaviconData() {
       if (!websiteUrl || websiteUrl.trim() === "") {
         console.log(`No website for ${stock.Name}, marking 'not found'`);
         await collection.updateOne({ _id: id }, {
-          $set: { link: "not found", favicon: "not found" }
+          $set: { favicon: "not found" }
         });
         continue;
       }
 
       const faviconUrl = await getFaviconUrl(websiteUrl,stock.Name);
       await collection.updateOne({ _id: id }, {
-        $set: { favicon: faviconUrl }
+        $set: { favicon:`https://mainstocklist.s3.eu-north-1.amazonaws.com/favicons/${stock.Name}.ico`  }
       });
 
       console.log(`Updated ${stock.Name}: ${faviconUrl}`);
