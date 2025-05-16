@@ -124,7 +124,7 @@ async function main() {
     const companies = await mainCollection.find({}).toArray();
 
     console.log("\n⚙️ Starting parallel processing with 5 concurrent tasks...");
-    const limit = pLimit(5);
+    const limit = pLimit(3);
 
     const tasks = companies.map((company) =>
       limit(async () => {
