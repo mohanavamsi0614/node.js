@@ -6,6 +6,15 @@ import mime from "mime-types";
 import { readFile } from "fs/promises";
 import pLimit from "p-limit";
 import dotenv from "dotenv";
+import express from "express";
+
+const app=express()
+app.get("/",(req,res)=>{
+  res.send("ewno")})
+app.listen(6600,(req,res)=>{
+  console.log("server runingg..")
+})
+
 dotenv.config();
 
 // AWS S3 Setup
