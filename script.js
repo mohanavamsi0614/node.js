@@ -97,7 +97,8 @@ async function processCompany(i) {
     await resultCollection.insertOne({
       company,
       response: res.data,
-      timestamp: new Date()
+      timestamp: new Date(),
+      url:url
     });
 
     console.log(`✅ Saved API response for ${company} to MongoDB\n${"-".repeat(40)}`);
@@ -125,7 +126,6 @@ async function main() {
       limit(async () => {
         const url = company.source_url;
         const existing = await responseCollection.findOne({
-          company: company.Name,
           url: url
         });
 
