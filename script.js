@@ -113,12 +113,30 @@ async function main() {
 
     await loadFavicons();
 
-    const collection = mongoClient.db("main_stock_list").collection("main_stock_list");
-    const companies = await collection.find({}).toArray();
+    const mainCollection = mongoClient.db("main_stock_list").collection("main_stock_list");
+    const responseCollection = mongoClient.db("main_stock_list").collection("api_responses");
+
+    const companies = await mainCollection.find({}).toArray();
 
     console.log("\n⚙️ Starting parallel processing with 10 concurrent tasks...");
-    const limit = pLimit(10);
-    const tasks = companies.map((company) => limit(() => processCompany(company)));
+    const limit = pLimit(5);
+
+    const tasks = companies.map((company) =>
+      limit(async () => {
+        const url = company.source_url;
+        const existing = await responseCollection.findOne({
+          company: company.Name,
+          url: url
+        });
+
+        if (existing) {
+          console.log(`⏩ Skipping ${company.Name}, link already processed.`);
+          return;
+        }
+
+        await processCompany(company);
+      })
+    );
 
     await Promise.all(tasks);
 
@@ -130,5 +148,6 @@ async function main() {
     console.log("🔒 MongoDB connection closed");
   }
 }
+
 
 main();
