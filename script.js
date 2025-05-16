@@ -8,12 +8,13 @@ import pLimit from "p-limit";
 import dotenv from "dotenv";
 import express from "express";
 
-const app=express()
-app.get("/",(req,res)=>{
-  res.send("ewno")})
-app.listen(6600,(req,res)=>{
-  console.log("server runingg..")
-})
+const app = express();
+app.get("/", (req, res) => {
+  res.send("ewno");
+});
+app.listen(6600, () => {
+  console.log("server running...");
+});
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ dotenv.config();
 const S3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: "eu-north-1"
+  region: "eu-north-1",
 });
 const BUCKET_NAME = "mainstocklist";
 
@@ -53,22 +54,24 @@ async function processCompany(i) {
       console.log(`🌐 Downloading from: ${url}`);
       const response = await axios.get(url, {
         responseType: "arraybuffer",
-        timeout: 10000
+        timeout: 10000,
       });
 
       const contentType =
         response.headers["content-type"] || mime.lookup(url) || "application/octet-stream";
-      console.log(`📦 Uploading to S3 as ${contentType} ...`);
 
+      const timestampedTitle = `${Date.now()}_${title}`;
+
+      console.log(`📦 Uploading to S3 as ${contentType} ...`);
       const params = {
         Bucket: BUCKET_NAME,
-        Key: `reports/${title}`,
+        Key: `reports/${timestampedTitle}`,
         Body: response.data,
-        ContentType: contentType
+        ContentType: contentType,
       };
 
       await S3.putObject(params).promise();
-      url = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/reports/${title}`;
+      url = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/reports/${timestampedTitle}`;
       console.log(`✅ S3 upload complete: ${url}`);
     } else {
       console.log(`📄 Skipping PDF for ${company}`);
@@ -82,7 +85,7 @@ async function processCompany(i) {
       link: url,
       url,
       favicon,
-      flag: "test1505"
+      flag: "test1505",
     };
 
     console.log(`📤 Sending to API for ${company} ...`);
@@ -98,7 +101,7 @@ async function processCompany(i) {
       company,
       response: res.data,
       timestamp: new Date(),
-      url:url
+      url,
     });
 
     console.log(`✅ Saved API response for ${company} to MongoDB\n${"-".repeat(40)}`);
@@ -119,14 +122,14 @@ async function main() {
 
     const companies = await mainCollection.find({}).toArray();
 
-    console.log("\n⚙️ Starting parallel processing with 10 concurrent tasks...");
+    console.log("\n⚙️ Starting parallel processing with 5 concurrent tasks...");
     const limit = pLimit(5);
 
     const tasks = companies.map((company) =>
       limit(async () => {
         const url = company.source_url;
         const existing = await responseCollection.findOne({
-          url: url
+          url: url,
         });
 
         if (existing) {
@@ -148,6 +151,5 @@ async function main() {
     console.log("🔒 MongoDB connection closed");
   }
 }
-
 
 main();
