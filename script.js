@@ -46,6 +46,7 @@ async function processCompany(i) {
   const title = i.title || "";
   let url = i.source_url || "";
   const favicon = symbols[company] || "";
+  const ogurl=url;
 
   try {
     console.log(`\n🚀 Processing: ${company}`);
@@ -101,7 +102,7 @@ async function processCompany(i) {
       company,
       response: res.data,
       timestamp: new Date(),
-      url,
+      url:ogurl,
     });
 
     console.log(`✅ Saved API response for ${company} to MongoDB\n${"-".repeat(40)}`);
