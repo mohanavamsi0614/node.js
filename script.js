@@ -4,7 +4,8 @@ const { MongoClient } = require("mongodb");
 const AWS = require("aws-sdk");
 const mime = require("mime-types");
 const { readFile } = require("fs/promises");
-const dot=require("dotenv").config()
+const pLimit = require("p-limit");
+require("dotenv").config();
 
 // AWS S3 Setup
 const S3 = new AWS.S3({
@@ -76,7 +77,6 @@ async function processCompany(i) {
 
         console.log(`🎉 API response for ${company}: ${res.status} ${res.statusText}`);
 
-        // Insert API response into another collection
         const resultCollection = mongoClient.db("main_stock_list").collection("api_responses");
         await resultCollection.insertOne({
             company,
@@ -100,8 +100,11 @@ async function main() {
         const collection = mongoClient.db("main_stock_list").collection("main_stock_list");
         const companies = await collection.find({}).toArray();
 
-        console.log("\n⚙️ Starting parallel processing...");
-        await Promise.all(companies.map(processCompany));
+        console.log("\n⚙️ Starting parallel processing with 10 concurrent tasks...");
+        const limit = pLimit(10);
+        const tasks = companies.map(company => limit(() => processCompany(company)));
+
+        await Promise.all(tasks);
 
         console.log("\n✅ All done!");
     } catch (err) {
