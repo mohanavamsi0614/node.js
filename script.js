@@ -7,16 +7,17 @@ import { readFile } from "fs/promises";
 import pLimit from "p-limit";
 import dotenv from "dotenv";
 import express from "express";
+import cron from "node-cron";
+
+dotenv.config();
 
 const app = express();
 app.get("/", (req, res) => {
-  res.send("ewno");
+  res.send("Server is running...");
 });
 app.listen(6600, () => {
-  console.log("server running...");
+  console.log("🚀 Express server running on port 6600...");
 });
-
-dotenv.config();
 
 // AWS S3 Setup
 const S3 = new AWS.S3({
@@ -46,7 +47,7 @@ async function processCompany(i) {
   const title = i.title || "";
   let url = i.source_url || "";
   const favicon = symbols[company] || "";
-  const ogurl=url;
+  const ogurl = url;
 
   try {
     console.log(`\n🚀 Processing: ${company}`);
@@ -102,7 +103,7 @@ async function processCompany(i) {
       company,
       response: res.data,
       timestamp: new Date(),
-      url:ogurl,
+      url: ogurl,
     });
 
     console.log(`✅ Saved API response for ${company} to MongoDB\n${"-".repeat(40)}`);
@@ -153,4 +154,8 @@ async function main() {
   }
 }
 
-main();
+// 🕒 Run every 2 minutes
+cron.schedule("*/2 * * * *", async () => {
+  console.log("⏱️ Running job every 2 minutes...");
+  await main();
+});
