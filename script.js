@@ -157,5 +157,5 @@ async function main() {
 // 🕒 Run every 2 minutes
 cron.schedule("*/2 * * * *", async () => {
   console.log("⏱️ Running job every 2 minutes...");
-  await main();
+  await axios.get("https://node-js-2-xvhk.onrender.com")
 });
