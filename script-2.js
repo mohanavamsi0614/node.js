@@ -119,10 +119,10 @@ async function main() {
 
     await loadFavicons();
 
-    const mainCollection = mongoClient.db("main_stock_list").collection("main_stock_list").slice(40000)
+    const mainCollection = mongoClient.db("main_stock_list").collection("main_stock_list")
     const responseCollection = mongoClient.db("main_stock_list").collection("api_responses");
 
-    const companies = await mainCollection.find({}).toArray();
+    const companies = await mainCollection.find({}).toArray().slice(40000);
 
     console.log("\n⚙️ Starting parallel processing with 2 concurrent tasks...");
     const limit = pLimit(2);
