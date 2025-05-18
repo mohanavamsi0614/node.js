@@ -122,7 +122,9 @@ async function main() {
     const mainCollection = mongoClient.db("main_stock_list").collection("main_stock_list")
     const responseCollection = mongoClient.db("main_stock_list").collection("api_responses");
 
-    const companies = await mainCollection.find({}).toArray().slice(40000);
+    let companies = await mainCollection.find({}).toArray();
+    companies=companies.slice(40000)
+    
 
     console.log("\n⚙️ Starting parallel processing with 2 concurrent tasks...");
     const limit = pLimit(2);
