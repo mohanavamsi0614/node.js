@@ -1,5 +1,4 @@
 import axios from "axios";
-import fs from "fs/promises";
 import { MongoClient } from "mongodb";
 import express from  "express";
 
@@ -16,7 +15,7 @@ app.listen(3000, () => {
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
 const DB_NAME = "stocksDB";
 console.log("ihiok")
-const COLLECTION_NAME = "Web_links";
+const COLLECTION_NAME = "Web_links_all_stock_list";
 
 // Connect to MongoDB
 async function connectToMongo() {
@@ -24,30 +23,33 @@ async function connectToMongo() {
   await client.connect();
   const db = client.db(DB_NAME);
   const collection = db.collection(COLLECTION_NAME);
-  return { client, collection };
+  var all_stocks=client.db("financial_reports").collection("all_stock_list");
+  return { client, collection,all_stocks };
 }
 
-const { collection } = await connectToMongo();
+const { collection,all_stocks } = await connectToMongo();
 
 // Read stocks from file
-let stocks = JSON.parse(await fs.readFile("./main_stocks_investor.json", "utf-8"));
+let stocks = await all_stocks.find({}).toArray();
+console.log("loaded")
+
 // Get already processed symbols
 let Symbols = await collection.find({}).toArray();
 console.log("loaded")
 Symbols = Symbols
-.filter((i) =>i.ir.length!=0)
+.filter((i) =>i.links.length!=0)
 .map((i) => i.symbol);
 console.log(Symbols)
 for (let stock of stocks) {
-  if (Symbols.includes(stock.Symbol)) continue;
-  if (!stock.Website) continue;
+  if (Symbols.includes(stock.symbol)) continue;
 
-  console.log("Processing stock:", stock.Name);
+  console.log("Processing stock:", stock.name);
+
 
   try {
     const res = await axios.post(
       "https://api.firecrawl.dev/v1/scrape",
-      { url: stock.Website, formats: ["links"] },
+      { url: stock.link, formats: ["links"] },
       {
         headers: {
           Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
@@ -55,31 +57,45 @@ for (let stock of stocks) {
       }
     );
 
-    const links = res.data.data.links;
+    let links = res.data.data.links;
 
-    const doc = await collection.findOne({ symbol: stock.Symbol });
+    const res_2 = await axios.post(
+      "https://api.firecrawl.dev/v1/scrape",
+      { url: stock.ir, formats: ["links"] },
+      {
+        headers: {
+          Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
+        },
+      }
+    );
+    links=[...links,...res_2.data.data.links]
+
+
+    const doc = await collection.findOne({ symbol: stock.symbol });
 
     if (doc) {
       const existingLinks = doc.links || [];
       const combinedLinks = [...new Set([...existingLinks, ...links])];
 
       await collection.updateOne(
-        { symbol: stock.Symbol },
+        { symbol: stock.symbol },
         { $set: { links: combinedLinks, ir: "done" } }
       );
     } else {
       await collection.insertOne({
-        name: stock.Name,
-        symbol: stock.Symbol,
-        website: stock.Website,
+        name: stock.name,
+        symbol: stock.symbol,
+        off_website: stock.link,
+        ir_website:stock.ir,
         links,
         ir: "done",
       });
     }
 
-    console.log(`✅ Inserted/Updated data for ${stock.Name}`);
+    console.log(`✅ Inserted/Updated data for ${stock.name}`);
   } catch (err) {
-    console.error(`❌ Error with ${stock.Name}:`, err.message);
-   
+    console.error(`❌ Error with ${stock.name}:`, err.message);
+    console.log("⚙️ Falling back to local scraper...");
+
   }
 }
