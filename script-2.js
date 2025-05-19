@@ -55,7 +55,12 @@ async function processCompany(i) {
   try {
     console.log(`\n🚀 Processing: ${company}`);
 
-    if (!url.endsWith(".pdf") && !url.endsWith(".PDF")) {
+    // Check for disallowed file extensions
+    const lowerUrl = url.toLowerCase();
+    const disallowedExtensions = [".mp3", ".mp4", ".zip"];
+    if (disallowedExtensions.some(ext => lowerUrl.endsWith(ext))) {
+      console.log(`📄 Skipping unsupported file type for ${company}`);
+    } else {
       console.log(`🌐 Downloading from: ${url}`);
       const response = await axios.get(url, {
         responseType: "arraybuffer",
@@ -78,8 +83,6 @@ async function processCompany(i) {
       await S3.putObject(params).promise();
       url = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/reports/${timestampedTitle}`;
       console.log(`✅ S3 upload complete: ${url}`);
-    } else {
-      console.log(`📄 Skipping PDF for ${company}`);
     }
 
     const reqBody = {
@@ -113,9 +116,7 @@ async function processCompany(i) {
   } catch (err) {
     console.error(`❌ Error with ${company}: ${err.message}\n${"-".repeat(40)}`);
   }
-}
-
-  try {
+}  try {
     await mongoClient.connect();
     console.log("🟢 Connected to MongoDB");
 
