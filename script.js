@@ -112,7 +112,6 @@ async function processCompany(i) {
   }
 }
 
-async function main() {
   try {
     await mongoClient.connect();
     console.log("🟢 Connected to MongoDB");
@@ -152,7 +151,6 @@ async function main() {
     await mongoClient.close();
     console.log("🔒 MongoDB connection closed");
   }
-}
 
 // 🕒 Run every 2 minutes
 cron.schedule("*/2 * * * *", async () => {
