@@ -18,7 +18,10 @@ app.get("/", (req, res) => {
 app.listen(6600, () => {
   console.log("🚀 Express server running on port 6600...");
 });
-
+cron.schedule("*/2 * * * *", async () => {
+  console.log("⏱️ Running job every 2 minutes...");
+  await axios.get("https://node-js-2-xvhk.onrender.com")
+});
 // AWS S3 Setup
 const S3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -152,8 +155,3 @@ async function processCompany(i) {
     console.log("🔒 MongoDB connection closed");
   }
 
-// 🕒 Run every 2 minutes
-cron.schedule("*/2 * * * *", async () => {
-  console.log("⏱️ Running job every 2 minutes...");
-  await axios.get("https://node-js-2-xvhk.onrender.com")
-});
