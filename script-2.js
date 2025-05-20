@@ -140,7 +140,7 @@ async function processCompany(i) {
         });
 
         if (existing) {
-          console.log(`⏩ Skipping ${company.Name}, link already processed.`);
+          
           return;
         }
 
