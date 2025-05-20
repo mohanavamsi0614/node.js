@@ -139,7 +139,7 @@ async function loadFavicons() {
         });
 
         if (existing) {
-          console.log(`⏩ Skipping ${company.Name}, link already processed.`);
+          
           return;
         }
 
