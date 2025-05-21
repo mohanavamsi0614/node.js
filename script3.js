@@ -134,7 +134,7 @@ async function processCompany(i) {
     existingResponse=existingResponse.map((i) => i.url);
 
     console.log("\n⚙️ Starting parallel processing with 2 concurrent tasks...");
-    const limit = pLimit(3);
+    const limit = pLimit(1);
 
     const tasks = companies.map((company) =>
       limit(async () => {
