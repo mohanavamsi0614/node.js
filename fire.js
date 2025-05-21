@@ -44,7 +44,7 @@ console.log("loaded")
 let Symbols = await collection.find({}).toArray();
 console.log("loaded")
 Symbols = Symbols
-.filter((i) =>i.links.length!=0)
+.filter((i) =>i.ir.length!=0)
 .map((i) => i.symbol);
 console.log(Symbols)
 for (let stock of stocks) {
@@ -109,7 +109,7 @@ for (let stock of stocks) {
       const res1 = await scaraper(stock.link);
       const res_2 = await scaraper(stock.ir);
       links=[...res1,...res_2]
-      if (links) {
+      if (links.length!=0) {
         await collection.insertOne({
           name: stock.name,
           symbol: stock.symbol,
