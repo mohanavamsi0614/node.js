@@ -52,56 +52,56 @@ for (let stock of stocks.slice(30000)) {
   console.log("Processing stock:", stock.name);
 
 
-  try {
-    const res = await axios.post(
-      "https://api.firecrawl.dev/v1/scrape",
-      { url: stock.link, formats: ["links"] },
-      {
-        headers: {
-          Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
-        },
-      }
-    );
-    await sleep()
+  // try {
+  //   const res = await axios.post(
+  //     "https://api.firecrawl.dev/v1/scrape",
+  //     { url: stock.link, formats: ["links"] },
+  //     {
+  //       headers: {
+  //         Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
+  //       },
+  //     }
+  //   );
+  //   await sleep()
 
-    console.log("offical done for ",stock.name)
-    const res_2 = await axios.post(
-      "https://api.firecrawl.dev/v1/scrape",
-      { url: stock.ir, formats: ["links"] },
-      {
-        headers: {
-          Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
-        },
-      }
-    );
-    links=[...res.data.data.links,...res_2.data.data.links]
+  //   console.log("offical done for ",stock.name)
+  //   const res_2 = await axios.post(
+  //     "https://api.firecrawl.dev/v1/scrape",
+  //     { url: stock.ir, formats: ["links"] },
+  //     {
+  //       headers: {
+  //         Authorization: "Bearer fc-e2a73f0e071b48adadbcb6cf022f9626",
+  //       },
+  //     }
+  //   );
+  //   links=[...res.data.data.links,...res_2.data.data.links]
 
 
-    const doc = await collection.findOne({ symbol: stock.symbol });
+  //   const doc = await collection.findOne({ symbol: stock.symbol });
 
-    if (doc) {
-      const existingLinks = doc.links || [];
-      const combinedLinks = [...new Set([...existingLinks, ...links])];
+  //   if (doc) {
+  //     const existingLinks = doc.links || [];
+  //     const combinedLinks = [...new Set([...existingLinks, ...links])];
 
-      await collection.updateOne(
-        { symbol: stock.symbol },
-        { $set: { links: combinedLinks, ir: "done" } }
-      );
-    } else {
-      await collection.insertOne({
-        name: stock.name,
-        symbol: stock.symbol,
-        off_website: stock.link,
-        ir_website:stock.ir,
-        links,
-        ir: "done",
-      });
-    }
+  //     await collection.updateOne(
+  //       { symbol: stock.symbol },
+  //       { $set: { links: combinedLinks, ir: "done" } }
+  //     );
+  //   } else {
+  //     await collection.insertOne({
+  //       name: stock.name,
+  //       symbol: stock.symbol,
+  //       off_website: stock.link,
+  //       ir_website:stock.ir,
+  //       links,
+  //       ir: "done",
+  //     });
+  //   }
 
-    console.log(`✅ Inserted/Updated data for ${stock.name}`);
-  } catch (err) {
-    console.error(`❌ Error with ${stock.name}:`, err.message);
-    console.log("⚙️ Falling back to local scraper...");
+  //   console.log(`✅ Inserted/Updated data for ${stock.name}`);
+  // } catch (err) {
+  //   console.error(`❌ Error with ${stock.name}:`, err.message);
+  //   console.log("⚙️ Falling back to local scraper...");
 
     try {
       let links=[]
@@ -124,4 +124,3 @@ off_website: stock.link,
       console.log(`❌ Local scrape failed for ${stock.Name}:`, err2.message);
     }
   }
-}
