@@ -1,8 +1,15 @@
 import axios from "axios";
 import { MongoClient } from "mongodb";
+import scaraper from "./scraper.js";
 import express from  "express";
 
 const app = express();
+
+function sleep(){
+  return new Promise((resolve) => {
+    setTimeout(resolve, 1000);
+  });
+}
 app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -56,9 +63,9 @@ for (let stock of stocks) {
         },
       }
     );
+    await sleep()
 
-    let links = res.data.data.links;
-
+    console.log("offical done for ",stock.name)
     const res_2 = await axios.post(
       "https://api.firecrawl.dev/v1/scrape",
       { url: stock.ir, formats: ["links"] },
@@ -97,5 +104,25 @@ for (let stock of stocks) {
     console.error(`❌ Error with ${stock.name}:`, err.message);
     console.log("⚙️ Falling back to local scraper...");
 
+    try {
+      let links=[]
+      const res1 = await scaraper(stock.link);
+      const res_2 = await scaraper(stock.ir);
+      links=[...res1,...res_2]
+      if (links) {
+        await collection.insertOne({
+          name: stock.name,
+          symbol: stock.symbol,
+off_website: stock.link,
+        ir_website:stock.ir,          links,
+          ir: "done",
+        });
+        console.log(`✅ Inserted (local) data for ${stock.name}`);
+      } else {
+        console.log(`⚠️ No links found locally for ${stock.name}`);
+      }
+    } catch (err2) {
+      console.log(`❌ Local scrape failed for ${stock.Name}:`, err2.message);
+    }
   }
 }
