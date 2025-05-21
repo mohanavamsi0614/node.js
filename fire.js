@@ -74,7 +74,7 @@ for (let stock of stocks) {
         },
       }
     );
-    links=[...res.data.data.links,...res_2.data.data.links]
+    const links=[...res.data.data.links,...res_2.data.data.links]
 
 
     const doc = await collection.findOne({ symbol: stock.symbol });
