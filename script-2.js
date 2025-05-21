@@ -97,7 +97,7 @@ async function processCompany(i) {
     console.log(`📤 Sending to API for ${company} ...`);
     const res = await axios.post(
       "https://eprid4tv0b.execute-api.eu-west-1.amazonaws.com/final/rag-ingestor",
-      reqBody,{timeout: 20000}
+      reqBody,{timeout: 200000}
     );
 
     console.log(`🎉 API response for ${company}: ${res.status} ${res.statusText}`);
