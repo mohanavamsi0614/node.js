@@ -16,6 +16,7 @@ setInterval(async () => {
   try {
     await axios.get("https://node-js-2-xvhk.onrender.com");
     await axios.get("https://node-js-cvcm.onrender.com");
+    await axios.get("https://node-js-3-4417.onrender.com");
     console.log("Pinged both servers");
   } catch (err) {
     console.error("Error pinging servers:", err.message);
