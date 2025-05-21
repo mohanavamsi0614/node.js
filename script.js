@@ -1,4 +1,3 @@
-import fs from "fs";
 import axios from "axios";
 import { MongoClient } from "mongodb";
 import AWS from "aws-sdk";
@@ -18,10 +17,7 @@ app.get("/", (req, res) => {
 app.listen(6600, () => {
   console.log("🚀 Express server running on port 6600...");
 });
-cron.schedule("*/2 * * * *", async () => {
-  console.log("⏱️ Running job every 2 minutes...");
-  await axios.get("https://node-js-2-xvhk.onrender.com")
-});
+
 // AWS S3 Setup
 const S3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -41,7 +37,8 @@ async function loadFavicons() {
   const data = await readFile("favicon.json", "utf-8");
   symbols = JSON.parse(data);
   console.log("✅ Favicons loaded");
-}async function processCompany(i) {
+}
+async function processCompany(i) {
   const company = i.Name;
   const industry = i.Industry || "";
   const sector = i.Sector || "";
@@ -58,7 +55,10 @@ async function loadFavicons() {
     const disallowedExtensions = [".mp3", ".mp4", ".zip"];
     if (disallowedExtensions.some(ext => lowerUrl.endsWith(ext))) {
       console.log(`📄 Skipping unsupported file type for ${company}`);
-    } else {
+    } 
+    
+    else if (!(url.includes(".pdf") || url.includes(".PDF") || url.includes(".doc") || url.includes(".docx") || url.includes(".xls") || url.includes(".xlsx") || url.includes(".ppt") || url.includes(".pptx"))) {
+      console.log("uploading to s3");
       console.log(`🌐 Downloading from: ${url}`);
       const response = await axios.get(url, {
         responseType: "arraybuffer",
@@ -126,7 +126,10 @@ async function loadFavicons() {
     const mainCollection = mongoClient.db("main_stock_list").collection("main_stock_list");
     const responseCollection = mongoClient.db("main_stock_list").collection("api_responses");
 
+    
     const companies = await mainCollection.find({}).toArray();
+    let existingResponse = await responseCollection.find({}).toArray()
+    existingResponse=existingResponse.map((i) => i.url);
 
     console.log("\n⚙️ Starting parallel processing with 2 concurrent tasks...");
     const limit = pLimit(2);
@@ -134,12 +137,10 @@ async function loadFavicons() {
     const tasks = companies.map((company) =>
       limit(async () => {
         const url = company.source_url;
-        const existing = await responseCollection.findOne({
-          url: url,
-        });
+        const existing = existingResponse.find((i) => i === url);
 
         if (existing) {
-          
+          console.log(`🔄 Already processed: ${company.Name}`);
           return;
         }
 
@@ -156,4 +157,3 @@ async function loadFavicons() {
     await mongoClient.close();
     console.log("🔒 MongoDB connection closed");
   }
-
