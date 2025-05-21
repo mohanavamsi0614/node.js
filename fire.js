@@ -46,7 +46,7 @@ console.log("loaded")
 Symbols = Symbols
 .filter((i) =>i.links.length!=0)
 .map((i) => i.symbol);
-for (let stock of stocks) {
+for (let stock of stocks.slice(30000)) {
   if (Symbols.includes(stock.symbol)) continue;
 
   console.log("Processing stock:", stock.name);
@@ -74,7 +74,7 @@ for (let stock of stocks) {
         },
       }
     );
-    links=[...links,...res_2.data.data.links]
+    links=[...res.data.data.links,...res_2.data.data.links]
 
 
     const doc = await collection.findOne({ symbol: stock.symbol });
