@@ -44,9 +44,8 @@ console.log("loaded")
 let Symbols = await collection.find({}).toArray();
 console.log("loaded")
 Symbols = Symbols
-.filter((i) =>i.ir.length!=0)
+.filter((i) =>i.links.length!=0)
 .map((i) => i.symbol);
-console.log(Symbols)
 for (let stock of stocks) {
   if (Symbols.includes(stock.symbol)) continue;
 
