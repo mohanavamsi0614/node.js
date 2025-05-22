@@ -26,12 +26,17 @@ const all_stocks=JSON.parse(await fs.readFile("./main_stocks.json","utf-8"))
 
 console.log("loaded")
 for (let stock of all_stocks){
-    console.log(stock)
     if (exist.includes(stock.Symbol)) continue;
     const {Industry,Name,Sector,Symbol}=stock
     console.log(Symbol)
     const api=`https://stockanalysis.com/fetch/infinitenews?type=s&symbol=${Symbol}`
+    try{
     let res=await axios.get(api)
+    if (res.data.data==404){
+        console.log("error")
+        continue
+    }
+    console.log(res.data)
     res=res.data.data.map((i)=>{return {url:i.url,title:i.title}})
     await collection.insertOne({
         symbol:Symbol,
@@ -40,6 +45,10 @@ for (let stock of all_stocks){
         industry:Industry,
         links:res
     })
+}
+catch{
+    console.log("error")
+}
     console.log("done for ",Name)
 }
 console.log("goood")
