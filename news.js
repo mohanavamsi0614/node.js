@@ -2,7 +2,14 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
-
+import express from "express"
+const app=express()
+app.get("/",(req,res)=>{
+    res.send("working...")
+})
+app.listen(6000,()=>{
+    console.log("ewfj")
+})
 // MongoDB config
 const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster0.3huumg1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const DB_NAME = "all_stock_list";
