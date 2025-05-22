@@ -14,7 +14,7 @@ const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster0.3huumg1.mongodb.ne
 const DB_NAME = "main_stock_list";
 const COLLECTION_NAME = "news";
 
-const client = MongoClient(MONGO_URI)
+const client = new MongoClient(MONGO_URI)
   await client.connect();
   const db = client.db(DB_NAME);
   const collection = db.collection(COLLECTION_NAME);
