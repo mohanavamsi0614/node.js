@@ -22,12 +22,14 @@ const client = new MongoClient(MONGO_URI)
 
 let exist=await collection.find({}).toArray()
 exist=exist.map((i)=>i.symbol)
-const all_stocks=await fs.readFile("./main_stocks.json","utf-8")
+const all_stocks=JSON.parse(await fs.readFile("./main_stocks.json","utf-8"))
 
 console.log("loaded")
 for (let stock of all_stocks){
+    console.log(stock)
     if (exist.includes(stock.Symbol)) continue;
     const {Industry,Name,Sector,Symbol}=stock
+    console.log(Symbol)
     const api=`https://stockanalysis.com/fetch/infinitenews?type=s&symbol=${Symbol}`
     let res=await axios.get(api)
     res=res.data.data.map((i)=>{return {url:i.url,title:i.title}})
