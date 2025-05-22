@@ -2,18 +2,11 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import fs from "fs/promises";
 import { MongoClient } from "mongodb";
-import express from "express"
-
-const app=express()
-
-app.get("/",(req,res)=>{
-  res.send("running...")})
-
 
 // MongoDB config
-const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
-const DB_NAME = "stocksDB";
-const COLLECTION_NAME = "profiles_allstocks";
+const MONGO_URI = "mongodb+srv://mohanavamsi14:vamsi@cluster0.3huumg1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DB_NAME = "all_stock_list";
+const COLLECTION_NAME = "news";
 
 // Utility functions
 function sleep(ms) {
@@ -43,7 +36,7 @@ async function connectToMongo() {
 
 // Main stock processing logic
 async function processStock({ Name, Symbol, Sector, Industry }, collection) {
-  const link = `https://stockanalysis.com/quote/${Symbol.replace(':', '/')}/company`;
+  const link = `https://stockanalysis.com/quote/${Symbol.replace(':', '/')}`;
   logWithTime(`➡️ Fetching: ${link}`);
 
   try {
@@ -67,26 +60,35 @@ async function processStock({ Name, Symbol, Sector, Industry }, collection) {
       .toArray()
       .some((el) => $(el).text().includes("There is no news available yet."));
 
-   const description = $("p")
-  .toArray()
-  .map(p => $(p).text())
-  .filter(text => text.trim().length > 0).join(" ");
+    const links = $("h3 a")
+      .toArray()
+      .map((a) => {
+        const href = $(a).attr("href");
+        const title = $(a).text();
+        if (!href) return null;
+        return  {href:href.startsWith("http") ? href : `https://stockanalysis.com${href}`, title};
+      })
+      .filter(Boolean);
 
-const dataToStore = {
-  Symbol,
-  company: Name,
-  Sector,
-  Industry,
-  description,
-};
+    if (!noNews && links.length === "") {
+      logWithTime(`🤖 No links, likely bot detection.`);
+      return "bot";
+    }
 
+    const dataToStore = {
+      Symbol,
+      company: Name,
+      Sector,
+      Industry,
+      links: noNews ? ["No links available"] : links,
+    };
 
     await collection.updateOne({ Symbol }, { $set: dataToStore }, { upsert: true });
 
     if (noNews) {
       logWithTime(`🚫 No news for ${Symbol}`);
     } else {
-      logWithTime(`✅ Done: ${Symbol} | ${description.length} des`);
+      logWithTime(`✅ Done: ${Symbol} | ${links.length} links`);
     }
 
   } catch (err) {
@@ -100,7 +102,7 @@ async function runScraper() {
   let botDetected = false;
 
   try {
-    const stocks = JSON.parse(await fs.readFile("./allstocks.json", "utf-8"));
+    const stocks = JSON.parse(await fs.readFile("./allstocks/all_stocks.json", "utf-8"));
     const existingDocs = await collection.find({}, { projection: { Symbol: 1 } }).toArray();
     const doneSymbols = new Set(existingDocs.map((d) => d.Symbol));
 
@@ -155,7 +157,3 @@ async function runScraper() {
     }
   }
 })();
-
-app.listen(5000,()=>{
-  console.log("runing")
-})
