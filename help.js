@@ -15,6 +15,7 @@ app.listen(3000, () => {
 setInterval(async () => {
   try {
     await axios.get("https://node-js-1-lmr5.onrender.com");
+    await axios.get("https://node-js-2-c0tc.onrender.com");
     // await axios.get("https://node-js-cvcm.onrender.com");
     // await axios.get("https://node-js-3-4417.onrender.com");
     console.log("Pinged both servers");
