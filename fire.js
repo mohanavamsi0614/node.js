@@ -1,6 +1,5 @@
 import axios from "axios";
 import { MongoClient } from "mongodb";
-import scaraper from "./scraper.js";
 import express from  "express";
 
 const app = express();
@@ -46,7 +45,7 @@ console.log("loaded")
 Symbols = Symbols
 .filter((i) =>i.links.length!=0)
 .map((i) => i.symbol);
-for (let stock of stocks) {
+for (let stock of stocks.slice(20000)) {
   if (Symbols.includes(stock.symbol)) continue;
 
   console.log("Processing stock:", stock.name);
@@ -102,6 +101,5 @@ for (let stock of stocks) {
   } catch (err) {
     console.error(`❌ Error with ${stock.name}:`, err.message);
     console.log("⚙️ Falling back to local scraper...");
-
-   
   }
+}
