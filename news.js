@@ -102,7 +102,7 @@ async function runScraper() {
   let botDetected = false;
 
   try {
-    const stocks = JSON.parse(await fs.readFile("./allstocks/all_stocks.json", "utf-8"));
+    const stocks = JSON.parse(await fs.readFile("./all_stocks.json", "utf-8"));
     const existingDocs = await collection.find({}, { projection: { Symbol: 1 } }).toArray();
     const doneSymbols = new Set(existingDocs.map((d) => d.Symbol));
 
