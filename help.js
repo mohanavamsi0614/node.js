@@ -16,7 +16,7 @@ setInterval(async () => {
   try {
     await axios.get("https://node-js-1-lmr5.onrender.com");
     await axios.get("https://node-js-2-c0tc.onrender.com");
-    // await axios.get("https://node-js-cvcm.onrender.com");
+     await axios.get("https://node-js-4-uopl.onrender.com");
    await axios.get("https://news-main-w8hx.onrender.com/");
     console.log("Pinged both servers");
   } catch (err) {
