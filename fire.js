@@ -45,7 +45,7 @@ console.log("loaded")
 Symbols = Symbols
 .filter((i) =>i.links.length!=0)
 .map((i) => i.symbol);
-for (let stock of stocks.slice(20000)) {
+for (let stock of stocks) {
   if (Symbols.includes(stock.symbol)) continue;
 
   console.log("Processing stock:", stock.name);
@@ -100,6 +100,5 @@ for (let stock of stocks.slice(20000)) {
     console.log(`✅ Inserted/Updated data for ${stock.name}`);
   } catch (err) {
     console.error(`❌ Error with ${stock.name}:`, err.message);
-    console.log("⚙️ Falling back to local scraper...");
   }
 }
