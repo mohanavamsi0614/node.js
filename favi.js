@@ -3,6 +3,15 @@ import AWS from "aws-sdk";
 import axios from "axios";
 import dotenv from "dotenv";
 import fs from "fs/promises"
+import express from "express"
+
+const app=express()
+
+app.get("/",(req,res)=>{
+  res.send("ewfbj")})
+app.listen(6500,()=>{
+  console.log("listening")
+})
 
 dotenv.config();
 
