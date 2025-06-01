@@ -3,11 +3,8 @@ import { MongoClient } from "mongodb";
 import AWS from "aws-sdk";
 import mime from "mime-types";
 import { readFile } from "fs/promises";
-import pLimit from "p-limit";
 import dotenv from "dotenv";
 import express from "express";
-import cron from "node-cron";
-import { time } from "console";
 
 dotenv.config();
 
@@ -15,11 +12,10 @@ const app = express();
 app.get("/", (req, res) => {
   res.send("Server is running...");
 });
-app.listen(6600, () => {
-  console.log("🚀 Express server running on port 6600...");
+app.listen
+(6000, () => {
+  console.log("Server is listening on port 6000");
 });
-
-// AWS S3 Setup
 const S3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -27,18 +23,19 @@ const S3 = new AWS.S3({
 });
 const BUCKET_NAME = "mainstocklist";
 
-// MongoDB Setup
-const mongoClient = new MongoClient(
-  "mongodb+srv://mohanavamsi14:vamsi@cluster0.3huumg1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+const mongoClient = new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster0.3huumg1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 
 let symbols = {};
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function loadFavicons() {
   const data = await readFile("favicon.json", "utf-8");
   symbols = JSON.parse(data);
-  console.log("✅ Favicons loaded");
+  console.log("🧠 Loaded favicons.");
 }
+
+// Main function for processing a single company
 async function processCompany(i) {
   const company = i.Name;
   const industry = i.Industry || "";
@@ -49,18 +46,17 @@ async function processCompany(i) {
   const ogurl = url;
 
   try {
-    console.log(`\n🚀 Processing: ${company}`);
+    console.log(`\n🟡 Starting: ${company}`);
 
-    // Check for disallowed file extensions
     const lowerUrl = url.toLowerCase();
     const disallowedExtensions = [".mp3", ".mp4", ".zip"];
-    if (disallowedExtensions.some(ext => lowerUrl.endsWith(ext))) {
-      console.log(`📄 Skipping unsupported file type for ${company}`);
-    } 
-    
-    else if (!(url.includes(".pdf") || url.includes(".PDF") || url.includes(".doc") || url.includes(".docx") || url.includes(".xls") || url.includes(".xlsx") || url.includes(".ppt") || url.includes(".pptx"))) {
-      console.log("uploading to s3");
-      console.log(`🌐 Downloading from: ${url}`);
+    if (disallowedExtensions.some((ext) => lowerUrl.endsWith(ext))) {
+      console.log(`🚫 Skipping unsupported file type: ${url}`);
+      return;
+    }
+
+    if (!/\.(pdf|docx?|xlsx?|pptx?)$/i.test(url)) {
+      console.log(`⬇️  Downloading content from: ${url}`);
       const response = await axios.get(url, {
         responseType: "arraybuffer",
         timeout: 10000,
@@ -69,9 +65,9 @@ async function processCompany(i) {
       const contentType =
         response.headers["content-type"] || mime.lookup(url) || "application/octet-stream";
 
-      const timestampedTitle = `${Date.now()}_${title}`;
+      const safeTitle = title.replace(/[^\w\d_\-\.]/g, "_");
+      const timestampedTitle = `${Date.now()}_${safeTitle}`;
 
-      console.log(`📦 Uploading to S3 as ${contentType} ...`);
       const params = {
         Bucket: BUCKET_NAME,
         Key: `reports/${timestampedTitle}`,
@@ -79,9 +75,11 @@ async function processCompany(i) {
         ContentType: contentType,
       };
 
+      console.log(`📦 Uploading to S3 as ${timestampedTitle} (${contentType})`);
       await S3.putObject(params).promise();
-      url = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/reports/${timestampedTitle}`;
-      console.log(`✅ S3 upload complete: ${url}`);
+
+      url = `https://${BUCKET_NAME}.s3.${S3.config.region}.amazonaws.com/reports/${timestampedTitle}`;
+      console.log(`✅ Uploaded to S3: ${url}`);
     }
 
     const reqBody = {
@@ -95,13 +93,13 @@ async function processCompany(i) {
       flag: "test1505",
     };
 
-    console.log(`📤 Sending to API for ${company} ...`);
+    console.log(`📤 Sending data to ingestion API...`);
     const res = await axios.post(
       "https://eprid4tv0b.execute-api.eu-west-1.amazonaws.com/final/rag-ingestor",
       reqBody
     );
 
-    console.log(`🎉 API response for ${company}: ${res.status} ${res.statusText}`);
+    console.log(`🎯 API response: ${res.status} ${res.statusText}`);
 
     const resultCollection = mongoClient.db("main_stock_list").collection("api_responses");
     await resultCollection.insertOne({
@@ -111,13 +109,16 @@ async function processCompany(i) {
       url: ogurl,
     });
 
-    console.log(`✅ Saved API response for ${company} to MongoDB\n${"-".repeat(40)}`);
+    console.log(`📝 Saved ${company} response to MongoDB.`);
+    console.log("-".repeat(50));
   } catch (err) {
-    console.error(`❌ Error with ${company}: ${err.message}\n${"-".repeat(40)}`);
+    console.error(`❌ Error processing ${company}: ${err.message}`);
+    console.log("-".repeat(50));
   }
 }
 
-
+// Main execution block
+(async () => {
   try {
     await mongoClient.connect();
     console.log("🟢 Connected to MongoDB");
@@ -127,32 +128,35 @@ async function processCompany(i) {
     const mainCollection = mongoClient.db("main_stock_list").collection("main_stock_list");
     const responseCollection = mongoClient.db("main_stock_list").collection("api_responses");
 
-    
-    let companies = await mainCollection.find({}).toArray()
+    let companies = await readFile("./main_stocks.json", "utf-8");
+    companies = JSON.parse(companies);
+    console.log(`📊 Loaded ${companies.length} companies`);
 
-    console.log("\n⚙️ Starting parallel processing with 2 concurrent tasks...");
-    const limit = pLimit(2);
+    for (const company of companies) {
+      const matches = await mainCollection.find({ Name: company.Name }).toArray();
 
-    const tasks = companies.map((company) =>
-      limit(async () => {
-        const url = company.source_url;
-        const existing = await responseCollection.findOne({ url });
-
-        if (existing) {
-          console.log(`🔄 Already processed: ${company.Name}`);
-          return;
+      for (const match of matches) {
+        if (!match.source_url) {
+          console.log(`⚠️  No source URL for ${match.Name}`);
+          continue;
         }
 
-        await processCompany(company);
-      })
-    );
+        const existing = await responseCollection.findOne({ url: match.source_url });
+        if (existing) {
+          console.log(`🔁 Already processed: ${match.Name}`);
+          continue;
+        }
 
-    await Promise.all(tasks);
+        await processCompany(match);
+        await sleep(300); // Optional: delay between requests
+      }
+    }
 
-    console.log("\n✅ All done!");
+    console.log("\n✅ All companies processed.");
   } catch (err) {
-    console.error("❌ Main Error:", err.message);
+    console.error("🔥 Main Error:", err.message);
   } finally {
     await mongoClient.close();
     console.log("🔒 MongoDB connection closed");
   }
+})();
