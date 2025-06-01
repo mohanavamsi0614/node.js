@@ -1,6 +1,5 @@
 import axios from "axios";
 import { MongoClient } from "mongodb";
-import scraper from "./scraper.js";
 import express from "express";
 
 const app = express();
@@ -87,32 +86,7 @@ async function processStock(stock) {
 
     console.log(`✅ Inserted/Updated data for ${stock.name}`);
   } catch (err) {
-    console.error(`❌ Error with ${stock.name}:`, err.message);
-    console.log("⚙️ Falling back to local scraper...");
-
-    try {
-      const [local1, local2] = await Promise.all([
-        scraper(stock.link),
-        scraper(stock.ir),
-      ]);
-      const links = [...local1, ...local2];
-
-      if (links.length > 0) {
-        await collection.insertOne({
-          name: stock.name,
-          symbol: stock.symbol,
-          off_website: stock.link,
-          ir_website: stock.ir,
-          links,
-          ir: "done",
-        });
-        console.log(`✅ Inserted (local) data for ${stock.name}`);
-      } else {
-        console.log(`⚠️ No links found locally for ${stock.name}`);
-      }
-    } catch (localErr) {
-      console.log(`❌ Local scrape failed for ${stock.name}:`, localErr.message);
-    }
+    console.error(`❌ Error with ${stock.name}:`, err.message); 
   }
 }
 
