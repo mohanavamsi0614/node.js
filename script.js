@@ -7,6 +7,7 @@ import pLimit from "p-limit";
 import dotenv from "dotenv";
 import express from "express";
 import cron from "node-cron";
+import { time } from "console";
 
 dotenv.config();
 
@@ -97,7 +98,7 @@ async function processCompany(i) {
     console.log(`📤 Sending to API for ${company} ...`);
     const res = await axios.post(
       "https://eprid4tv0b.execute-api.eu-west-1.amazonaws.com/final/rag-ingestor",
-      reqBody,{timeout: 200000}
+      reqBody
     );
 
     console.log(`🎉 API response for ${company}: ${res.status} ${res.statusText}`);
@@ -127,9 +128,7 @@ async function processCompany(i) {
     const responseCollection = mongoClient.db("main_stock_list").collection("api_responses");
 
     
-    const companies = await mainCollection.find({}).toArray();
-    let existingResponse = await responseCollection.find({}).toArray()
-    existingResponse=existingResponse.map((i) => i.url);
+    let companies = await mainCollection.find({}).toArray()
 
     console.log("\n⚙️ Starting parallel processing with 2 concurrent tasks...");
     const limit = pLimit(2);
@@ -137,7 +136,7 @@ async function processCompany(i) {
     const tasks = companies.map((company) =>
       limit(async () => {
         const url = company.source_url;
-        const existing = existingResponse.find((i) => i === url);
+        const existing = await responseCollection.findOne({ url });
 
         if (existing) {
           console.log(`🔄 Already processed: ${company.Name}`);
