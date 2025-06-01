@@ -92,7 +92,7 @@ async function processStock(stock) {
 
 // Batch stocks into chunks of 4 and process in parallel
 const BATCH_SIZE = 5;
-const startIndex = 40000;
+const startIndex = 0;
 const stocksToProcess = stocks.slice(startIndex);
 
 for (let i = 0; i < stocksToProcess.length; i += BATCH_SIZE) {
