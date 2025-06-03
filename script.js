@@ -37,6 +37,7 @@ async function loadFavicons() {
 
 // Main function for processing a single company
 async function processCompany(i) {
+  console.log("statted the company",i.Name,"for",i.source_url)
   const company = i.Name;
   const industry = i.Industry || "";
   const sector = i.Sector || "";
@@ -60,6 +61,11 @@ async function processCompany(i) {
       const response = await axios.get(url, {
         responseType: "arraybuffer",
         timeout: 10000,
+        headers: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0...)",
+  "sec-ch-ua": '"Chromium";v="131", "Not_A Brand";v="24"',
+}
+
       });
 
       const contentType =
@@ -73,6 +79,7 @@ async function processCompany(i) {
         Key: `reports/${timestampedTitle}`,
         Body: response.data,
         ContentType: contentType,
+
       };
 
       console.log(`📦 Uploading to S3 as ${timestampedTitle} (${contentType})`);
