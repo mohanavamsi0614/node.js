@@ -3,6 +3,17 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import dotenv from "dotenv";
 import fs from "fs/promises";
+import express from "express";
+
+
+const app = express();
+app.get("/", (req, res) => {
+  res.send("Server is running...");
+});
+app.listen
+(6500, () => {
+  console.log("Server is listening on port 6000");
+});
 
 dotenv.config();
 
