@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import express from "express"
-client=new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster0.m8goeuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+const client=new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster0.m8goeuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 await client.connect();
 const db=client.db("main_stock_list")
 const collection=db.collection("api_responses");
@@ -26,16 +26,9 @@ app.post("/get",async (req,res)=>{
 app.post("/add",async (req,res)=>{
     const {symbol,name,link,id}=req.body;
     const check=await collection.insertOne({symbol, name, link, id});
-    if(check){
-        res.json({
-            status: "already exists",
-        });
-    } else {
-        await collection.insertOne({url: url});
-        res.json({
-            status: "success",
-        });
-    }
+    res.json({
+        status: "success",
+    });
 })
 
 app.listen(3000, () => {
