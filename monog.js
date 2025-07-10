@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 import express from "express"
 const client=new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster0.m8goeuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-const news_cllient=new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
+const news_client=new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster.74mis.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
 await news_client.connect()
 const news_db=news_cllient.db("stocksDB")
 const news_data=news_db.collection("Web_links_all_stock_list")
