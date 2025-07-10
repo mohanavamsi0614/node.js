@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 import express from "express"
 const client=new MongoClient("mongodb+srv://mohanavamsi14:vamsi@cluster0.m8goeuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 await client.connect();
-const db=client.db("main_stock_list")
+const db=client.db("all_stock_list")
 const collection=db.collection("api_responses");
 
 const app = express();
