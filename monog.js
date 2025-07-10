@@ -17,7 +17,7 @@ app.get("/",(req,res)=>{
 app.post("/news",async (req,res)=>{
     const name=req.body.name;
     const check = await  news_data.findOne({name:name})
-    res.json(check.links.slice(20))
+    res.json(check.links.slice(0,20))
 })
 app.post("/get",async (req,res)=>{
     const url=req.body.url;
