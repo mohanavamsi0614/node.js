@@ -24,8 +24,8 @@ app.post("/get",async (req,res)=>{
     });
 })
 app.post("/add",async (req,res)=>{
-    const {symbol,name,link,id}=req.body;
-    const check=await collection.insertOne({symbol, name, link, id});
+    const {symbol,name,link,id,length}=req.body;
+    const check=await collection.insertOne({symbol, name, link, id,length});
     res.json({
         status: "success",
     });
