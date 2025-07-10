@@ -18,14 +18,14 @@ app.post("/news",async (req,res)=>{
     const name=req.body.name;
     const check = await  news_data.findOne({name:name})
     const data=check.links.slice(0,20)
-    res.json({links:data})
+    return res.json({links:data})
 })
 app.post("/get",async (req,res)=>{
     const url=req.body.url;
     const check=await collection.findOne({url: url
     });
     if(check){
-        res.json({
+        return res.json({
             status: "success",
         });
     }        
