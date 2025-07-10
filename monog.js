@@ -14,7 +14,7 @@ app.use(express.json());
 app.get("/",(req,res)=>{
     res.send("Welcome to the MongoDB API");
 })
-app.post("/news",(req,res)=>{
+app.post("/news",async (req,res)=>{
     const name=req.body.name;
     const check = await  news_data.findOne({name:name})
     res.json(check.links.slice(20))
