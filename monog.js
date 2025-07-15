@@ -20,19 +20,16 @@ app.post("/news",async (req,res)=>{
     const data=check.links.slice(0,20)
     return res.json({links:data})
 })
-app.post("/get",async (req,res)=>{
-    const url=req.body.url;
-    const check=await collection.findOne({url: url
-    });
-    if(check){
-        return res.json({
-            status: "success",
-        });
-    }        
-   return res.json({
-        status: "not found",
-    });
-})
+app.post("/get", async (req, res) => {
+    try {
+        const { url } = req.body;
+        const check = await collection.findOne({ url });
+        res.json({ status: check ? "success" : "not found" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 app.post("/add",async (req,res)=>{
     const {symbol,name,link,id,length}=req.body;
     const check=await collection.insertOne({symbol, name, link, id,length});
