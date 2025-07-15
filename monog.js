@@ -29,7 +29,7 @@ app.post("/get",async (req,res)=>{
             status: "success",
         });
     }        
-    res.json({
+   return res.json({
         status: "not found",
     });
 })
