@@ -24,7 +24,12 @@ app.post("/get", async (req, res) => {
     try {
         const { url } = req.body;
         const check = await collection.findOne({ url });
-        res.json({ status: check ? "success" : "not found" });
+        if(check){
+            return res.status(200).json({ status: "success"});
+        }
+        else{
+            return res.status(404).json({"status":"no"})
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
