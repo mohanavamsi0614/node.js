@@ -6,8 +6,8 @@ await news_client.connect()
 const news_db=news_client.db("stocksDB")
 const news_data=news_db.collection("Web_links_all_stock_list")
 await client.connect();
-const db=client.db("all_stock_list")
-const collection=db.collection("api_responses");
+const db=client.db("companyiq")
+const collection=db.collection("companyiq");
 
 const app = express();
 app.use(express.json());    
@@ -23,7 +23,7 @@ app.post("/news",async (req,res)=>{
 app.post("/get", async (req, res) => {
     try {
         const { url } = req.body;
-        const check = await collection.findOne({ url });
+        const check = await collection.findOne({ link:url });
         if(check){
             return res.status(200).json({ status: "success"});
         }
@@ -36,8 +36,8 @@ app.post("/get", async (req, res) => {
     }
 });
 app.post("/add",async (req,res)=>{
-    const {symbol,name,link,id,length}=req.body;
-    const check=await collection.insertOne({symbol, name, link, id,length});
+    const {link}=req.body;
+    const check=await collection.insertOne({ link });
     res.json({
         status: "success",
     });
