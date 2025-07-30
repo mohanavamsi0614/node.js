@@ -28,7 +28,7 @@ app.post("/get", async (req, res) => {
             return res.status(200).json({ status: "success"});
         }
         else{
-            return res.status(404).json({"status":"no"})
+            return res.status(200).json({"status":"no"})
         }
     } catch (err) {
         console.error(err);
