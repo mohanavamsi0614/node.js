@@ -1,8 +1,8 @@
-const express=require("express")
-const multer=require("multer")
-const fs=require("fs")
-const cors=require("cors")
-const fetch=require("node-fetch")
+import express from "express"
+import multer from "multer"
+import fs from "fs"
+import cors from "cors"
+import fetch from "node-fetch"
 
 
 const app=express()
