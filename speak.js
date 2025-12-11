@@ -8,7 +8,7 @@ import fetch from "node-fetch"
 const app=express()
 const upload=multer({storage:multer.memoryStorage()})
 
-app.use(cors())
+app.use(cors({origin:"*"}))
 app.post("/upload",upload.single("file"),async(req,res)=>{
     if(!req.file){
         return res.status(400).send("No file uploaded.")
