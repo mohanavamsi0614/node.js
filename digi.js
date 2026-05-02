@@ -5,8 +5,8 @@ import { write, writeFile } from "fs";
 
 const app = express();
 
-const CLIENT_ID = "MC549CEC19";
-const sercreat_id="f350db1866d7ecbb4454"
+const CLIENT_ID = "CU22070C85";
+const sercreat_id="9e172250e8eb352c9dd5"
 const REDIRECT_URI = "http://localhost:3000/auth/digilocker/callback";
 
 // ---- helpers ----
@@ -72,7 +72,7 @@ app.get("/auth/digilocker/callback", async (req, res) => {
 
     // ---- STEP 3: Token Exchange ----
     const tokenRes = await axios.post(
-      "https://api.digitallocker.gov.in/public/oauth2/1/token",
+      "https://digilocker.meripehchaan.gov.in/public/oauth2/1/token",
       new URLSearchParams({
         code,
         grant_type: "authorization_code",
@@ -100,7 +100,6 @@ app.get("/auth/digilocker/callback", async (req, res) => {
         },
       }
     );
-    console.log(docsRes)
     res.json(docsRes.data)
   } catch (err) {
     writeFile("text.html",err.response?.data || err.message,(err)=>{console.log(err)})
