@@ -7,7 +7,7 @@ const app = express();
 
 const CLIENT_ID = "CU22070C85";
 const sercreat_id="9e172250e8eb352c9dd5"
-const REDIRECT_URI = "http://localhost:3000/auth/digilocker/callback";
+const REDIRECT_URI = "https://node-js-1-ry77.onrender.com/auth/digilocker/callback";
 
 // ---- helpers ----
 function base64URLEncode(buffer) {
