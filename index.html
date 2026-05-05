@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,10 +30,10 @@
 
         body {
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -52,23 +53,32 @@
         }
 
         .blob-1 {
-            top: -10%; left: -10%;
-            width: 500px; height: 500px;
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
             background: #4F46E5;
             border-radius: 50%;
         }
 
         .blob-2 {
-            bottom: -20%; right: -10%;
-            width: 600px; height: 600px;
+            bottom: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
             background: #EC4899;
             border-radius: 50%;
             animation-delay: -5s;
         }
 
         @keyframes move {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(100px, 50px) scale(1.2); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(100px, 50px) scale(1.2);
+            }
         }
 
         /* Glassmorphism Container */
@@ -138,7 +148,7 @@
         .btn-action {
             background: white;
             color: var(--text-dark);
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             flex: 1;
         }
 
@@ -231,7 +241,7 @@
             font-weight: 600;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -258,7 +268,7 @@
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s;
             border-left: 4px solid var(--primary);
         }
@@ -283,6 +293,102 @@
             gap: 15px;
         }
 
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Pagination & Actions */
+        .pagination-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .read-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: #E5E7EB;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .unread-badge {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
         .loader {
             display: none;
             border: 3px solid #f3f3f3;
@@ -294,8 +400,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive */
@@ -303,17 +414,20 @@
             .action-grid {
                 flex-direction: column;
             }
+
             .profile-card {
                 flex-direction: column;
                 text-align: center;
                 gap: 15px;
             }
+
             .profile-info {
                 flex-direction: column;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -327,8 +441,10 @@
         <!-- Login View -->
         <div id="login-view">
             <div style="margin: 40px 0;">
-                <i class="fa-brands fa-microsoft" style="font-size: 5rem; color: var(--ms-blue); margin-bottom: 20px;"></i>
-                <h3 style="margin-bottom: 30px; font-weight: 500; color: var(--text-light);">Connect your Microsoft 365 Account</h3>
+                <i class="fa-brands fa-microsoft"
+                    style="font-size: 5rem; color: var(--ms-blue); margin-bottom: 20px;"></i>
+                <h3 style="margin-bottom: 30px; font-weight: 500; color: var(--text-light);">Connect your Microsoft 365
+                    Account</h3>
                 <a href="/microsoft" class="btn btn-ms">
                     <i class="fa-brands fa-windows"></i>
                     Sign in with Microsoft
@@ -356,9 +472,17 @@
                     <i class="fa-regular fa-envelope" style="color: var(--primary);"></i>
                     Recent Emails
                 </button>
+                <button class="btn btn-action" onclick="openComposeModal()">
+                    <i class="fa-solid fa-paper-plane" style="color: #10B981;"></i>
+                    Compose Mail
+                </button>
                 <button class="btn btn-action" onclick="fetchData('calendar')">
                     <i class="fa-regular fa-calendar-days" style="color: #EC4899;"></i>
-                    Upcoming Events
+                    Events
+                </button>
+                <button class="btn btn-action" onclick="openEventModal()">
+                    <i class="fa-solid fa-calendar-plus" style="color: #F59E0B;"></i>
+                    Add Event
                 </button>
             </div>
 
@@ -373,176 +497,504 @@
                         <p>Select an action above to fetch your Microsoft data.</p>
                     </div>
                 </div>
+                <div id="pagination" class="pagination-container" style="display: none;">
+                    <button class="btn btn-action" style="width: auto;" onclick="loadMore()">Load More</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // State management
-        let tokens = {
-            access_token: localStorage.getItem('ms_access_token'),
-            refresh_token: localStorage.getItem('ms_refresh_token')
-        };
-        let user = {
-            name: localStorage.getItem('ms_user_name'),
-            email: localStorage.getItem('ms_user_email')
-        };
+    <!-- Compose Modal -->
+    <div id="compose-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Compose Email</h2>
+                <button onclick="closeComposeModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>To (comma separated)</label>
+                <input type="text" id="mail-to" placeholder="example@outlook.com">
+            </div>
+            <div class="form-group">
+                <label>Subject</label>
+                <input type="text" id="mail-subject" placeholder="Meeting reminder">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="mail-body" placeholder="Write your message here..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-action" style="background: #f3f4f6;"
+                    onclick="closeComposeModal()">Cancel</button>
+                <button class="btn btn-ms" style="width: auto; margin: 0;" onclick="sendMail()">
+                    <i class="fa-solid fa-paper-plane"></i> Send
+                </button>
+            </div>
+        </div>
+    </div>
 
-        // Initialize App
-        function init() {
-            // Check URL hash for new tokens (OAuth redirect)
-            if (window.location.hash) {
-                const params = new URLSearchParams(window.location.hash.substring(1));
-                
-                if (params.has('access_token')) {
-                    tokens.access_token = params.get('access_token');
-                    tokens.refresh_token = params.get('refresh_token');
-                    user.name = params.get('name');
-                    user.email = params.get('email');
+    <!-- View Mail Modal -->
+    <div id="view-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="view-subject">Loading...</h2>
+                <button onclick="closeViewModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;">
+                    <i class="fa-solid fa-circle-user" style="font-size: 1.5rem; color: var(--primary);"></i>
+                    <div>
+                        <div id="view-from-name" style="font-weight: 600;"></div>
+                        <div id="view-from-email" style="font-size: 0.8rem; color: var(--text-light);"></div>
+                    </div>
+                </div>
+                <div id="view-date" style="font-size: 0.8rem; color: var(--text-light);"></div>
+            </div>
+            <div id="view-body" style="max-height: 400px; overflow-y: auto; line-height: 1.6; color: #374151;">
+                <div class="loader" id="view-loader" style="display: block; margin: 40px auto;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-action" onclick="closeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
-                    // Save to local storage
-                    localStorage.setItem('ms_access_token', tokens.access_token);
-                    localStorage.setItem('ms_refresh_token', tokens.refresh_token);
-                    localStorage.setItem('ms_user_name', user.name);
-                    localStorage.setItem('ms_user_email', user.email);
+    <!-- Add Event Modal -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Schedule Event</h2>
+                <button onclick="closeEventModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Event Subject</label>
+                <input type="text" id="event-subject" placeholder="Project Sync">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="event-body" placeholder="Discussing roadmap..."></textarea>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Start Time</label>
+                    <input type="datetime-local" id="event-start">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>End Time</label>
+                    <input type="datetime-local" id="event-end">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-action" style="background: #f3f4f6;"
+                    onclick="closeEventModal()">Cancel</button>
+                <button class="btn btn-ms" style="width: auto; margin: 0; background-color: #F59E0B;" onclick="createEvent()">
+                    <i class="fa-solid fa-plus"></i> Create Event
+                </button>
+            </div>
+        </div>
+    </div>
 
-                    // Clean URL
-                    window.history.replaceState(null, null, ' ');
+        <script>
+            // State management
+            let tokens = {
+                access_token: localStorage.getItem('ms_access_token'),
+                refresh_token: localStorage.getItem('ms_refresh_token')
+            };
+            let user = {
+                name: localStorage.getItem('ms_user_name'),
+                email: localStorage.getItem('ms_user_email')
+            };
+            let currentNextUrl = null;
+            let currentType = null;
+
+            // Initialize App
+            function init() {
+                // Check URL hash for new tokens (OAuth redirect)
+                if (window.location.hash) {
+                    const params = new URLSearchParams(window.location.hash.substring(1));
+
+                    if (params.has('access_token')) {
+                        tokens.access_token = params.get('access_token');
+                        tokens.refresh_token = params.get('refresh_token');
+                        user.name = params.get('name');
+                        user.email = params.get('email');
+
+                        // Save to local storage
+                        localStorage.setItem('ms_access_token', tokens.access_token);
+                        localStorage.setItem('ms_refresh_token', tokens.refresh_token);
+                        localStorage.setItem('ms_user_name', user.name);
+                        localStorage.setItem('ms_user_email', user.email);
+
+                        // Clean URL
+                        window.history.replaceState(null, null, ' ');
+                    }
+                }
+
+                render();
+            }
+
+            // Render correct view
+            function render() {
+                const loginView = document.getElementById('login-view');
+                const dashboardView = document.getElementById('dashboard-view');
+
+                if (tokens.access_token) {
+                    loginView.style.display = 'none';
+                    dashboardView.style.display = 'block';
+
+                    document.getElementById('user-name').textContent = user.name;
+                    document.getElementById('user-email').textContent = user.email;
+                    if (user.name) {
+                        document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
+                    }
+                } else {
+                    loginView.style.display = 'block';
+                    dashboardView.style.display = 'none';
                 }
             }
 
-            render();
-        }
-
-        // Render correct view
-        function render() {
-            const loginView = document.getElementById('login-view');
-            const dashboardView = document.getElementById('dashboard-view');
-
-            if (tokens.access_token) {
-                loginView.style.display = 'none';
-                dashboardView.style.display = 'block';
-                
-                document.getElementById('user-name').textContent = user.name;
-                document.getElementById('user-email').textContent = user.email;
-                if (user.name) {
-                    document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
-                }
-            } else {
-                loginView.style.display = 'block';
-                dashboardView.style.display = 'none';
+            // Logout
+            function logout() {
+                localStorage.clear();
+                tokens = {};
+                user = {};
+                render();
             }
-        }
 
-        // Logout
-        function logout() {
-            localStorage.clear();
-            tokens = {};
-            user = {};
-            render();
-        }
+            // Fetch Data from Backend
+            async function fetchData(type, append = false) {
+                const content = document.getElementById('results-content');
+                const loader = document.getElementById('loader');
+                const title = document.getElementById('results-title');
+                const pagination = document.getElementById('pagination');
 
-        // Fetch Data from Backend
-        async function fetchData(type) {
-            const content = document.getElementById('results-content');
-            const loader = document.getElementById('loader');
-            const title = document.getElementById('results-title');
-
-            title.textContent = type === 'mail' ? 'Recent Emails' : 'Upcoming Events';
-            content.innerHTML = '';
-            loader.style.display = 'block';
-
-            try {
-                const response = await fetch(`/${type}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ access_token: tokens.access_token })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+                currentType = type;
+                if (!append) {
+                    content.innerHTML = '';
+                    title.textContent = type === 'mail' ? 'Recent Emails' : 'Upcoming Events';
+                    currentNextUrl = null;
                 }
 
-                const data = await response.json();
-                loader.style.display = 'none';
+                loader.style.display = 'block';
+                pagination.style.display = 'none';
 
-                if (data.value && data.value.length > 0) {
-                    data.value.forEach(item => {
-                        if (type === 'mail') {
-                            const date = new Date(item.receivedDateTime).toLocaleString();
-                            content.innerHTML += `
-                                <div class="data-item">
-                                    <div class="item-title">${item.subject || '(No Subject)'}</div>
+                try {
+                    const endpoint = type === 'mail' ? '/read_mail' : '/calendar';
+                    const url = currentNextUrl ? `${endpoint}?nextUrl=${encodeURIComponent(currentNextUrl)}` : endpoint;
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ access_token: tokens.access_token })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data');
+                    }
+
+                    const result = await response.json();
+                    const data = type === 'mail' ? result.data : result;
+                    currentNextUrl = type === 'mail' ? result.nextUrl : null;
+
+                    loader.style.display = 'none';
+
+                    if (data.value && data.value.length > 0) {
+                        data.value.forEach(item => {
+                            if (type === 'mail') {
+                                const date = new Date(item.receivedDateTime).toLocaleString();
+                                const isRead = item.isRead;
+                                content.innerHTML += `
+                                <div class="data-item" onclick="viewMail('${item.id}', this, ${isRead})">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                        <div class="item-title">${item.subject || '(No Subject)'}</div>
+                                        <span class="read-badge ${isRead ? '' : 'unread-badge'}">${isRead ? 'Read' : 'Unread'}</span>
+                                    </div>
                                     <div class="item-meta">
                                         <span><i class="fa-solid fa-user"></i> ${item.from?.emailAddress?.name || 'Unknown'}</span>
                                         <span><i class="fa-regular fa-clock"></i> ${date}</span>
                                     </div>
                                 </div>
                             `;
-                        } else {
-                            const start = new Date(item.start.dateTime).toLocaleString();
-                            content.innerHTML += `
-                                <div class="data-item calendar">
+                            } else {
+                                const start = new Date(item.start.dateTime).toLocaleString();
+                                content.innerHTML += `
+                                <div class="data-item calendar" onclick="viewEvent('${item.id}', this)">
                                     <div class="item-title">${item.subject}</div>
                                     <div class="item-meta">
                                         <span><i class="fa-regular fa-calendar"></i> ${start}</span>
+                                        <span><i class="fa-solid fa-location-dot"></i> ${item.location?.displayName || 'Virtual'}</span>
                                     </div>
                                 </div>
                             `;
+                            }
+                        });
+
+                        if (currentNextUrl) {
+                            pagination.style.display = 'block';
                         }
-                    });
-                } else {
-                    content.innerHTML = `
+                    } else if (!append) {
+                        content.innerHTML = `
                         <div class="empty-state">
                             <i class="fa-regular fa-folder-open"></i>
                             <p>No ${type === 'mail' ? 'emails' : 'events'} found.</p>
                         </div>
                     `;
-                }
+                    }
 
-            } catch (error) {
-                loader.style.display = 'none';
-                content.innerHTML = `
+                } catch (error) {
+                    loader.style.display = 'none';
+                    content.innerHTML = `
                     <div class="empty-state" style="color: #EF4444;">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <p>Error fetching data. Your token might be expired.</p>
                         <button class="btn btn-action" onclick="refreshToken()" style="margin-top: 10px;">Refresh Token</button>
                     </div>
                 `;
-            }
-        }
-
-        // Refresh Token
-        async function refreshToken() {
-            try {
-                const response = await fetch('/refresh-token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ refresh_token: tokens.refresh_token })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    tokens.access_token = data.access_token;
-                    if (data.refresh_token) tokens.refresh_token = data.refresh_token;
-                    
-                    localStorage.setItem('ms_access_token', tokens.access_token);
-                    localStorage.setItem('ms_refresh_token', tokens.refresh_token);
-                    
-                    alert('Token refreshed successfully! You can fetch data again.');
-                } else {
-                    throw new Error('Refresh failed');
                 }
-            } catch (e) {
-                alert('Session expired. Please log in again.');
-                logout();
             }
-        }
 
-        // Run init on load
-        window.onload = init;
-    </script>
+            function loadMore() {
+                if (currentType) fetchData(currentType, true);
+            }
+
+            // View Mail and Mark as Read
+            async function viewMail(id, element, isRead) {
+                openViewModal();
+                const subjectEl = document.getElementById('view-subject');
+                const fromNameEl = document.getElementById('view-from-name');
+                const fromEmailEl = document.getElementById('view-from-email');
+                const dateEl = document.getElementById('view-date');
+                const bodyEl = document.getElementById('view-body');
+                const loader = document.getElementById('view-loader');
+
+                // Reset view
+                subjectEl.textContent = 'Loading...';
+                fromNameEl.textContent = '';
+                fromEmailEl.textContent = '';
+                dateEl.textContent = '';
+                bodyEl.innerHTML = '<div class="loader" id="view-loader" style="display: block; margin: 40px auto;"></div>';
+
+                try {
+                    // 1. Fetch mail content
+                    const response = await fetch(`/get_mail/${id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ accessToken: tokens.access_token })
+                    });
+
+                    if (response.ok) {
+                        const mail = await response.json();
+                        subjectEl.textContent = mail.subject || '(No Subject)';
+                        fromNameEl.textContent = mail.from?.emailAddress?.name || 'Unknown';
+                        fromEmailEl.textContent = mail.from?.emailAddress?.address || '';
+                        dateEl.textContent = new Date(mail.receivedDateTime).toLocaleString();
+
+                        // Handle HTML vs Text body
+                        if (mail.body?.contentType === 'html') {
+                            bodyEl.innerHTML = mail.body.content;
+                        } else {
+                            bodyEl.textContent = mail.body?.content || '(No content)';
+                        }
+                    } else {
+                        bodyEl.innerHTML = '<p style="color: #EF4444;">Failed to load email content.</p>';
+                    }
+
+                    // 2. Mark as read if needed
+                    if (!isRead) {
+                        const badge = element.querySelector('.read-badge');
+                        const markResponse = await fetch('/mark_as_read', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                access_token: tokens.access_token,
+                                message_id: id
+                            })
+                        });
+
+                        if (markResponse.ok) {
+                            badge.textContent = 'Read';
+                            badge.classList.remove('unread-badge');
+                            element.setAttribute('onclick', `viewMail('${id}', this, true)`);
+                        }
+                    }
+                } catch (err) {
+                    console.error(err);
+                    bodyEl.innerHTML = '<p style="color: #EF4444;">An error occurred while fetching the email.</p>';
+                }
+            }
+
+            function openViewModal() {
+                document.getElementById('view-modal').style.display = 'flex';
+            }
+
+            function closeViewModal() {
+                document.getElementById('view-modal').style.display = 'none';
+            }
+
+            // View Event
+            function viewEvent(id, element) {
+                // For now, we'll just show the subject in the view modal
+                // Ideally we'd fetch event details, but we can reuse the view-modal
+                openViewModal();
+                const subjectEl = document.getElementById('view-subject');
+                const fromNameEl = document.getElementById('view-from-name');
+                const fromEmailEl = document.getElementById('view-from-email');
+                const dateEl = document.getElementById('view-date');
+                const bodyEl = document.getElementById('view-body');
+
+                subjectEl.textContent = element.querySelector('.item-title').textContent;
+                fromNameEl.textContent = 'Calendar Event';
+                fromEmailEl.textContent = '';
+                dateEl.textContent = element.querySelector('.item-meta span').textContent;
+                bodyEl.innerHTML = '<p>Event details view not fully implemented, but event was clicked!</p>';
+            }
+
+            // Create Event
+            function openEventModal() {
+                document.getElementById('event-modal').style.display = 'flex';
+            }
+
+            function closeEventModal() {
+                document.getElementById('event-modal').style.display = 'none';
+            }
+
+            async function createEvent() {
+                const subject = document.getElementById('event-subject').value;
+                const body = document.getElementById('event-body').value;
+                const start = document.getElementById('event-start').value;
+                const end = document.getElementById('event-end').value;
+
+                if (!subject || !start || !end) {
+                    alert('Please fill subject and times');
+                    return;
+                }
+
+                const btn = document.querySelector('#event-modal .btn-ms');
+                const originalContent = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+
+                try {
+                    const response = await fetch('/create_event', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            access_token: tokens.access_token,
+                            subject,
+                            body,
+                            start,
+                            end
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Event scheduled! 📅');
+                        closeEventModal();
+                        fetchData('calendar');
+                    } else {
+                        throw new Error(result.error?.message || 'Failed to create event');
+                    }
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                }
+            }
+
+            // Compose & Send
+            function openComposeModal() {
+                document.getElementById('compose-modal').style.display = 'flex';
+            }
+
+            function closeComposeModal() {
+                document.getElementById('compose-modal').style.display = 'none';
+            }
+
+            async function sendMail() {
+                const to = document.getElementById('mail-to').value;
+                const subject = document.getElementById('mail-subject').value;
+                const body = document.getElementById('mail-body').value;
+
+                if (!to || !subject || !body) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                const emails = to.split(',').map(e => e.trim());
+                const btn = document.querySelector('#compose-modal .btn-ms');
+                const originalContent = btn.innerHTML;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+                try {
+                    const response = await fetch('/send_mail', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            access_token: tokens.access_token,
+                            subject,
+                            body,
+                            emails
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Mail sent successfully! 🚀');
+                        closeComposeModal();
+                        // Clear fields
+                        document.getElementById('mail-to').value = '';
+                        document.getElementById('mail-subject').value = '';
+                        document.getElementById('mail-body').value = '';
+                    } else {
+                        throw new Error(result.error?.message || 'Failed to send mail');
+                    }
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                }
+            }
+
+            // Refresh Token
+            async function refreshToken() {
+                try {
+                    const response = await fetch('/refresh-token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ refresh_token: tokens.refresh_token })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        tokens.access_token = data.access_token;
+                        if (data.refresh_token) tokens.refresh_token = data.refresh_token;
+
+                        localStorage.setItem('ms_access_token', tokens.access_token);
+                        localStorage.setItem('ms_refresh_token', tokens.refresh_token);
+
+                        alert('Token refreshed successfully! You can fetch data again.');
+                    } else {
+                        throw new Error('Refresh failed');
+                    }
+                } catch (e) {
+                    alert('Session expired. Please log in again.');
+                    logout();
+                }
+            }
+
+            // Run init on load
+            window.onload = init;
+        </script>
 </body>
+
 </html>

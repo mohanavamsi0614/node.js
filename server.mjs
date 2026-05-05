@@ -29,7 +29,7 @@ app.get("/microsoft", (req, res) => {
         response_type: "code",
         redirect_uri: process.env.REDIRECT_URI,
         response_mode: "query",
-        scope: "openid profile email offline_access User.Read Mail.Read Calendars.Read",
+        scope: "openid profile email offline_access User.Read Mail.Read Mail.ReadWrite Mail.Send Calendars.Read Calendars.ReadWrite Calendars.ReadWrite.Shared",
         prompt: "consent"
     });
 
@@ -81,25 +81,167 @@ app.get("/auth/microsoft/callback", async (req, res) => {
     }
 });
 
-app.post("/mail", async (req, res) => {
+app.post("/read_mail", async (req, res) => {
     const { access_token } = req.body;
-
+    const {nextUrl}=req.query
+    const url=nextUrl ? decodeURIComponent(nextUrl):"https://graph.microsoft.com/v1.0/me/messages?$top=10&$orderby=receivedDateTime DESC"
     try {
         const mails = await axios.get(
-            "https://graph.microsoft.com/v1.0/me/messages?$select=subject,from,receivedDateTime&$top=10",
+            url,
             {
                 headers: { Authorization: `Bearer ${access_token}` }
             }
         );
 
-        res.json(mails.data);
+        res.json({data:mails.data,nextUrl:mails.data["@odata.nextLink"]||null });
 
     } catch (err) {
         console.error(err.response?.data || err.message);
         res.status(500).send("Mail fetch failed");
     }
 });
+app.post("/create_event", async (req, res) => {
+  try {
+    const { access_token, subject, body, start, end } = req.body;
 
+    if (!access_token || !subject || !start || !end) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const response = await fetch(
+      "https://graph.microsoft.com/v1.0/me/events",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          subject: subject,
+          body: {
+            contentType: "HTML",
+            content: body || ""
+          },
+          start: {
+            dateTime: start,       // "2026-05-06T10:00:00"
+            timeZone: "Asia/Kolkata"
+          },
+          end: {
+            dateTime: end,
+            timeZone: "Asia/Kolkata"
+          }
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.json({ success: true, event: data });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create event" });
+  }
+});
+app.post("/get_mail/:id", async (req, res) => {
+  try {
+    const {accessToken} = req.body;
+    const { id } = req.params;
+
+    if (!accessToken || !id) {
+      return res.status(400).json({ error: "Missing token or message id" });
+    }
+
+    const response = await fetch(
+      `https://graph.microsoft.com/v1.0/me/messages/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    res.json(data);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch mail" });
+  }
+});
+
+
+app.post("/mark_as_read",async(req,res)=>{
+        const { access_token,message_id } = req.body;
+        const url=`https://graph.microsoft.com/v1.0/me/messages/${message_id}`
+        const data=await axios.patch(
+            url,
+            {
+                isRead: true
+            },
+            {
+                headers:{
+                    Authorization: `Bearer ${access_token}`
+                }
+            }
+        )
+        res.json({data:JSON.stringify(data.data)})
+})
+
+app.post("/send_mail", async (req, res) => {
+  try {
+    const { access_token, subject, body, emails } = req.body;
+
+    if (!access_token || !subject || !body || !emails?.length) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const response = await fetch(
+      "https://graph.microsoft.com/v1.0/me/sendMail",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: {
+            subject: subject,
+            body: {
+              contentType: "HTML",
+              content: body
+            },
+            toRecipients: emails.map(email => ({
+              emailAddress: {
+                address: email
+              }
+            }))
+          }
+        })
+      }
+    );
+
+    if (response.status === 202) {
+      return res.json({ success: true, message: "Mail sent 🚀" });
+    }
+
+    const error = await response.json();
+    return res.status(500).json({ error });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 app.post("/calendar", async (req, res) => {
     const { access_token } = req.body;
 
